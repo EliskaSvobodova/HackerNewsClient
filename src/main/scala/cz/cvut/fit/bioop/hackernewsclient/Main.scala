@@ -9,10 +9,11 @@ object Main {
                              + ", app commands = " + sArgs._2.mkString("(", ", ", ")"))
     val appOptions = parseAppOptions(sArgs._1)
     logger.info("Parsed app options: " + appOptions)
+    appOptions.processOptions()
+    CommandProcessor.process(appOptions, sArgs._2)
   }
 
   private val logger = LoggerFactory.getLogger(getClass.getSimpleName)
-  private val optionPattern = "--(.*)".r
 
   /**
    * Reads top application options and creates AppOptions according to them
@@ -23,12 +24,8 @@ object Main {
   def parseAppOptions(args: Array[String]): AppOptions = {
     for(arg <- args)
       arg match {
-        case optionPattern(arg) =>
-          arg match {
-            case "help" => return AppOptions(help = true)
-            case _ => throw new IllegalArgumentException("Unknown application option, try --help for possible options")
-          }
-        case _ => return AppOptions()
+          case "help" => return AppOptions(help = true)
+          case _ => throw new IllegalArgumentException("Unknown application option, try --help for possible options")
       }
     AppOptions()
   }
