@@ -1,9 +1,12 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
+import org.slf4j.LoggerFactory
+
 object Main {
   def main(args: Array[String]): Unit = {
     val appOptions = parseAppOptions(args)
-    println(appOptions)
+    val logger = LoggerFactory.getLogger(getClass.getSimpleName)
+    logger.info("Parsed app options: " + appOptions)
   }
 
   private val optionPattern = "--(.*)".r
