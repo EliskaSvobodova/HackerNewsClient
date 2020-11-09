@@ -4,17 +4,20 @@ import org.slf4j.LoggerFactory
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val appOptions = parseAppOptions(args)
-    val logger = LoggerFactory.getLogger(getClass.getSimpleName)
+    val sArgs = splitArgs(args)
+    logger.info("Split arguments: app options = " + sArgs._1.mkString("(", ", ", ")")
+                             + ", app commands = " + sArgs._2.mkString("(", ", ", ")"))
+    val appOptions = parseAppOptions(sArgs._1)
     logger.info("Parsed app options: " + appOptions)
   }
 
+  private val logger = LoggerFactory.getLogger(getClass.getSimpleName)
   private val optionPattern = "--(.*)".r
 
   /**
    * Reads top application options and creates AppOptions according to them
    *
-   * @param args all program's arguments
+   * @param args all app's arguments
    * @return filled out AppOptions
    */
   def parseAppOptions(args: Array[String]): AppOptions = {
@@ -28,5 +31,18 @@ object Main {
         case _ => return AppOptions()
       }
     AppOptions()
+  }
+
+  /**
+   * Splits app's arguments to app options and commands with their options
+   *
+   * @param args app's arguments
+   * @return (app options, commands with their options)
+   */
+  def splitArgs(args: Array[String]): (Array[String], Array[String]) = {
+    val splitIndex = args.indexWhere(arg => !arg.startsWith("--"))
+    if(splitIndex == -1) // there are no commands
+      return (args, Array[String]())
+    args.splitAt(splitIndex)
   }
 }
