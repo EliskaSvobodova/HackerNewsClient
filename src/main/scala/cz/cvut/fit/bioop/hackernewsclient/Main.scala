@@ -1,7 +1,5 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
-import org.slf4j.LoggerFactory
-
 object Main {
   def main(args: Array[String]): Unit = {
     val sArgs = splitArgs(args)
@@ -13,7 +11,7 @@ object Main {
     CommandProcessor.process(appOptions, sArgs._2)
   }
 
-  private val logger = LoggerFactory.getLogger(getClass.getSimpleName)
+  private val logger = Logger(getClass.getSimpleName)
 
   /**
    * Reads top application options and creates AppOptions according to them
@@ -24,7 +22,7 @@ object Main {
   def parseAppOptions(args: Array[String]): AppOptions = {
     for(arg <- args)
       arg match {
-          case "help" => return AppOptions(help = true)
+          case "--help" => return AppOptions(help = true)
           case _ => throw new IllegalArgumentException("Unknown application option, try --help for possible options")
       }
     AppOptions()
