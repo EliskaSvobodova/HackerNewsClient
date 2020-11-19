@@ -8,41 +8,24 @@ object TopStoriesCommand extends CommandObject {
   override val name: String = "top-stories"
 }
 
-class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends Command {
+class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends StoriesCommand {
   private val logger = Logger(getClass.getSimpleName)
-  private val pageRe = "--page=([0-9]+)".r
 
   override def execute(): Unit = {
     if(commandOptions.length == 0) {
-      printTitles()
+      printTitles(ApiClient.getTopStories())
       return
     }
     for(option <- commandOptions){
       option match {
-        case pageRe(pageNum) => printPage(pageNum.toInt)
+        case pageRe(pageNum) => printPage(pageNum.toInt, ApiClient.getTopStories())
         case "--help" => TopStoriesCommand.help()
         case unknown => printUnknownOption(unknown)
       }
     }
   }
 
-  def printTitles() = {
-    val topStoriesIds = ApiClient.getTopStories()
-    val range = Range(1, appOptions.limitOfStories + 1)
-    for {
-      (numDisplayed, storyId) <- range zip topStoriesIds
-    } yield {
-      logger.info("Get story " + storyId)
-      val item = ApiClient.getItem(storyId)
-      println(numDisplayed + ". " + item.title)
-    }
-  }
-
-  def printPage(pageNum: Int) = {
-
-  }
-
-  def printUnknownOption(option: String) = {
+  def printUnknownOption(option: String): Unit = {
     println("top-stories - unknown option \"" + option + "\"")
     println("Try \"hackernewsclient top-stories --help\" for possible options")
   }

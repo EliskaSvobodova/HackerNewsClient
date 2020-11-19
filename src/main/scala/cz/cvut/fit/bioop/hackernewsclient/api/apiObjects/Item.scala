@@ -16,7 +16,15 @@ case class Item (id: Long = -1,
                  score: Long = 0,
                  title: String = "no title",
                  parts: Array[Long] = Array(),
-                 descendants: Long = -1)
+                 descendants: Long = -1) {
+
+  override def toString: String = {
+    val fields = for {
+      field <- getClass.getDeclaredFields
+    } yield field.getName + " = " + field.get(this)
+    fields.mkString("Item[", ", ", "]")
+  }
+}
 
 object Item{
   implicit val rw: RW[Item] = macroRW
