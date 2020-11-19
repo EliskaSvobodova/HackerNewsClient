@@ -1,4 +1,4 @@
-package cz.cvut.fit.bioop.hackernewsclient
+package cz.cvut.fit.bioop.hackernewsclient.api
 
 import scala.io.Source
 

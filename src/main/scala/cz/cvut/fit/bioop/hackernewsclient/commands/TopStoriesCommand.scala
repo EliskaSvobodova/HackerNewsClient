@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger, RequestUrl}
-import cz.cvut.fit.bioop.hackernewsclient.ResponseParser
+import cz.cvut.fit.bioop.hackernewsclient.api.{ApiClient, RequestUrl, ResponseParser}
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
 
 
 object TopStoriesCommand extends CommandObject {
@@ -10,18 +10,40 @@ object TopStoriesCommand extends CommandObject {
 
 class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends Command {
   private val logger = Logger(getClass.getSimpleName)
+  private val pageRe = "--page=([0-9]+)".r
 
   override def execute(): Unit = {
-    val topStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/topstories.json")
+    if(commandOptions.length == 0) {
+      printTitles()
+      return
+    }
+    for(option <- commandOptions){
+      option match {
+        case pageRe(pageNum) => printPage(pageNum.toInt)
+        case "--help" => TopStoriesCommand.help()
+        case unknown => printUnknownOption(unknown)
+      }
+    }
+  }
+
+  def printTitles() = {
+    val topStoriesIds = ApiClient.getTopStories()
     val range = Range(1, appOptions.limitOfStories + 1)
-    val storyIds = topStoriesIds.substring(1, topStoriesIds.length - 1).split(",")
     for {
-      (numDisplayed, storyId) <- range zip storyIds
+      (numDisplayed, storyId) <- range zip topStoriesIds
     } yield {
       logger.info("Get story " + storyId)
-      val response = RequestUrl.get("https://hacker-news.firebaseio.com/v0/item/" + storyId + ".json?print=pretty")
-      val title = ResponseParser.getTitle(response)
-      println(numDisplayed + ". " + title)
+      val item = ApiClient.getItem(storyId)
+      println(numDisplayed + ". " + item.title)
     }
+  }
+
+  def printPage(pageNum: Int) = {
+
+  }
+
+  def printUnknownOption(option: String) = {
+    println("top-stories - unknown option \"" + option + "\"")
+    println("Try \"hackernewsclient top-stories --help\" for possible options")
   }
 }

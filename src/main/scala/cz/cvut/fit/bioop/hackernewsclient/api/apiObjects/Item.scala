@@ -1,5 +1,6 @@
-package cz.cvut.fit.bioop.hackernewsclient.apiObjects
-import upickle.default.{ReadWriter => RW, macroRW}
+package cz.cvut.fit.bioop.hackernewsclient.api.apiObjects
+
+import upickle.default.{macroRW, ReadWriter => RW}
 
 case class Item (id: Long = -1,
                  deleted: Boolean = false,
