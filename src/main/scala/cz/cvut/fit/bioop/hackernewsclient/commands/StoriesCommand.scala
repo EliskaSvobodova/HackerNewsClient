@@ -1,6 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
 
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
+import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 
 trait StoriesCommand extends Command {
   protected val pageRe = "--page=([0-9]+)".r
@@ -19,6 +20,6 @@ trait StoriesCommand extends Command {
     if(pageNum < 1 || pageNum > storiesIds.length)
       throw new IllegalArgumentException("Page number must be between 1 and " + storiesIds.length)
     val item = ApiClient.getItem(storiesIds(pageNum - 1))
-    println(item)
+    Renderer.renderItem(item)
   }
 }
