@@ -13,12 +13,12 @@ class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
 
   override def execute(): Unit = {
     if(commandOptions.length == 0) {
-      printTitles(ApiClient.getTopStories())
+      renderTitles(ApiClient.getTopStories())
       return
     }
     for(option <- commandOptions){
       option match {
-        case pageRe(pageNum) => printPage(pageNum.toInt, ApiClient.getTopStories())
+        case pageRe(pageNum) => renderPage(pageNum.toInt, ApiClient.getTopStories())
         case "--help" => TopStoriesCommand.help()
         case unknown => printUnknownOption(unknown)
       }

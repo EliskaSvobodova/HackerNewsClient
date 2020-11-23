@@ -13,12 +13,12 @@ class NewStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
 
   override def execute(): Unit = {
     if(commandOptions.length == 0) {
-      printTitles(ApiClient.getNewStories())
+      renderTitles(ApiClient.getNewStories())
       return
     }
     for(option <- commandOptions){
       option match {
-        case pageRe(pageNum) => printPage(pageNum.toInt, ApiClient.getNewStories())
+        case pageRe(pageNum) => renderPage(pageNum.toInt, ApiClient.getNewStories())
         case "--help" => NewStoriesCommand.help()
         case unknown => printUnknownOption(unknown)
       }
