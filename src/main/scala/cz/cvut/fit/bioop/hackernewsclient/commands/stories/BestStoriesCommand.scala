@@ -1,7 +1,8 @@
-package cz.cvut.fit.bioop.hackernewsclient.commands
+package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
+import cz.cvut.fit.bioop.hackernewsclient.commands.CommandObject
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
 
 object BestStoriesCommand extends CommandObject {
   override def help(): String = "Shows best stories from HackerNews"

@@ -1,6 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
-import cz.cvut.fit.bioop.hackernewsclient.commands.{BestStoriesCommand, Command, CommandObject, NewStoriesCommand, NotFoundCommand, TopStoriesCommand, UserCommand}
+import cz.cvut.fit.bioop.hackernewsclient.commands.stories.{BestStoriesCommand, NewStoriesCommand, TopStoriesCommand}
+import cz.cvut.fit.bioop.hackernewsclient.commands.{Command, CommandObject, NotFoundCommand, UserCommand}
 
 object CommandFactory {
   val allCommands: Array[CommandObject] = Array(TopStoriesCommand, NewStoriesCommand, BestStoriesCommand, UserCommand)

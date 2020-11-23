@@ -1,6 +1,7 @@
-package cz.cvut.fit.bioop.hackernewsclient.commands
+package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
+import cz.cvut.fit.bioop.hackernewsclient.commands.Command
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 
 import scala.util.matching.Regex
@@ -14,8 +15,9 @@ trait StoriesCommand extends Command {
   protected var pageSize = 10
 
   def renderPage(storiesIds: Array[Int]): Unit = {
-    if((page - 1) * pageSize > storiesIds.length) {
-      println(Console.RED + "There are no more stories on page " + page + Console.RESET)
+    if ((page - 1) * pageSize > storiesIds.length) {
+      println(
+        Console.RED + "There are no more stories on page " + page + Console.RESET)
       return
     }
     val range = Range((page - 1) * pageSize, page * pageSize)
