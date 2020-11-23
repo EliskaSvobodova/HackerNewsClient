@@ -12,21 +12,15 @@ class BestStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[S
   private val logger = Logger(getClass.getSimpleName)
 
   override def execute(): Unit = {
-    if(commandOptions.length == 0) {
-      renderTitles(ApiClient.getBestStories())
-      return
-    }
+    logger.info("Executing BestStoriesCommand")
     for(option <- commandOptions){
       option match {
-        case pageRe(pageNum) => renderPage(pageNum.toInt, ApiClient.getBestStories())
+        case pageRe(pageNum) => page = pageNum.toInt
+        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
         case "--help" => BestStoriesCommand.help()
-        case unknown => printUnknownOption(unknown)
+        case unknown => printUnknownOption(unknown, BestStoriesCommand.name)
       }
     }
-  }
-
-  def printUnknownOption(option: String): Unit = {
-    println("best-stories - unknown option \"" + option + "\"")
-    println("Try \"hackernewsclient best-stories --help\" for possible options")
+    renderPage(ApiClient.getBestStories())
   }
 }

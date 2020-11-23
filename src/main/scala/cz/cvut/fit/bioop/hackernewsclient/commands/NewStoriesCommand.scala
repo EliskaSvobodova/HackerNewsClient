@@ -12,21 +12,15 @@ class NewStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
   private val logger = Logger(getClass.getSimpleName)
 
   override def execute(): Unit = {
-    if(commandOptions.length == 0) {
-      renderTitles(ApiClient.getNewStories())
-      return
-    }
+    logger.info("Executing NewStoriesCommand")
     for(option <- commandOptions){
       option match {
-        case pageRe(pageNum) => renderPage(pageNum.toInt, ApiClient.getNewStories())
+        case pageRe(pageNum) => page = pageNum.toInt
+        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
         case "--help" => NewStoriesCommand.help()
-        case unknown => printUnknownOption(unknown)
+        case unknown => printUnknownOption(unknown, NewStoriesCommand.name)
       }
     }
-  }
-
-  def printUnknownOption(option: String): Unit = {
-    println("new-stories - unknown option \"" + option + "\"")
-    println("Try \"hackernewsclient new-stories --help\" for possible options")
+    renderPage(ApiClient.getNewStories())
   }
 }

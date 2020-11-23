@@ -1,9 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
 object AppOptions {
-
-  private val limitOfStoriesRe = "--limitOfStories=([0-9]+)".r
-
   /**
    * Reads top application options and creates AppOptions according to them
    *
@@ -15,7 +12,6 @@ object AppOptions {
     for(arg <- args)
       arg match {
         case "--help" => appOptions.help = true
-        case limitOfStoriesRe(limit) => appOptions.limitOfStories = limit.toInt
         case _ => throw new IllegalArgumentException("Unknown application option, try --help for possible options")
       }
     appOptions

@@ -1,5 +1,5 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
-import cz.cvut.fit.bioop.hackernewsclient.api.{ApiClient, RequestUrl, ResponseParser}
+import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
 
 
@@ -12,21 +12,15 @@ class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
   private val logger = Logger(getClass.getSimpleName)
 
   override def execute(): Unit = {
-    if(commandOptions.length == 0) {
-      renderTitles(ApiClient.getTopStories())
-      return
-    }
+    logger.info("Executing TopStoriesCommand")
     for(option <- commandOptions){
       option match {
-        case pageRe(pageNum) => renderPage(pageNum.toInt, ApiClient.getTopStories())
+        case pageRe(pageNum) => page = pageNum.toInt
+        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
         case "--help" => TopStoriesCommand.help()
-        case unknown => printUnknownOption(unknown)
+        case unknown => printUnknownOption(unknown, TopStoriesCommand.name)
       }
     }
-  }
-
-  def printUnknownOption(option: String): Unit = {
-    println("top-stories - unknown option \"" + option + "\"")
-    println("Try \"hackernewsclient top-stories --help\" for possible options")
+    renderPage(ApiClient.getTopStories())
   }
 }
