@@ -1,9 +1,9 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
-import cz.cvut.fit.bioop.hackernewsclient.commands.{BestStoriesCommand, Command, CommandObject, NewStoriesCommand, NotFoundCommand, TopStoriesCommand}
+import cz.cvut.fit.bioop.hackernewsclient.commands.{BestStoriesCommand, Command, CommandObject, NewStoriesCommand, NotFoundCommand, TopStoriesCommand, UserCommand}
 
 object CommandFactory {
-  val allCommands: Array[CommandObject] = Array(TopStoriesCommand, NewStoriesCommand, BestStoriesCommand)
+  val allCommands: Array[CommandObject] = Array(TopStoriesCommand, NewStoriesCommand, BestStoriesCommand, UserCommand)
 
   def create(appOptions: AppOptions, args: Array[String]): Command = {
     val commandOptions = args.slice(1, args.length)
@@ -11,6 +11,7 @@ object CommandFactory {
       case TopStoriesCommand.name => new TopStoriesCommand(appOptions, commandOptions)
       case NewStoriesCommand.name => new NewStoriesCommand(appOptions, commandOptions)
       case BestStoriesCommand.name => new BestStoriesCommand(appOptions, commandOptions)
+      case UserCommand.name => new UserCommand(appOptions, commandOptions)
       case _ => new NotFoundCommand(appOptions, commandOptions)
     }
   }

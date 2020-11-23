@@ -15,7 +15,7 @@ trait StoriesCommand extends Command {
 
   def renderPage(storiesIds: Array[Int]): Unit = {
     if((page - 1) * pageSize > storiesIds.length) {
-      println(Console.RED + "There are no more stories on page " + page)
+      println(Console.RED + "There are no more stories on page " + page + Console.RESET)
       return
     }
     val range = Range((page - 1) * pageSize, page * pageSize)
@@ -27,10 +27,5 @@ trait StoriesCommand extends Command {
       Renderer.renderItem(item)
       println()
     }
-  }
-
-  def printUnknownOption(option: String, commandName: String): Unit = {
-    println(commandName + " - unknown option \"" + option + "\"")
-    println("Try \"hackernewsclient " + commandName + " --help\" for possible options")
   }
 }
