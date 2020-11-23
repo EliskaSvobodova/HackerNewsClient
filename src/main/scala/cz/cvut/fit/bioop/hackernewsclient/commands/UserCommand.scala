@@ -1,8 +1,11 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
+
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.User
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger, OutputService}
+
+import scala.collection.mutable
 
 object UserCommand extends CommandObject {
   override def help(): String = "Fetches user's data"
@@ -15,7 +18,7 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
   private val idRe = "--id=([a-zA-Z0-9_]+)".r
 
   private var id = ""
-  private var stories = false
+  private var display = mutable.TreeSet[String]()
 
   override def execute(): Unit = {
     logger.info("Executing UserCommand")
@@ -23,31 +26,19 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
     for(option <- commandOptions) {
       option match {
         case idRe(givenId) => id = givenId
-        case "--stories" => stories = true
+        case "--stories" => display.add("story")
+        case "--comments" => display.add("comment")
+        case "--jobs" => display.add("job")
+        case "--polls" => display.add("poll")
+        case "--all" => display = mutable.TreeSet("story", "comment", "job", "poll")
         case "--help" => UserCommand.help()
         case unknown => printUnknownOption(unknown, UserCommand.name)
       }
     }
     if(id.length == 0){
-      println("user command: " + Console.RED + "Missing compulsory option --id=[value]" + Console.RESET)
+      Renderer.displayError("user command: Missing compulsory option --id=[value]")
       return
     }
-    val user = ApiClient.getUser(id)
-    render(user)
-  }
-
-  private def render(user: User): Unit = {
-    Renderer.renderUser(user)
-    if(stories) renderStories(user)
-  }
-
-  private def renderStories(user: User): Unit = {
-    for(itemId <- user.submitted) {
-      val item = ApiClient.getItem(itemId)
-      if(!item.deleted && item.itemType == "story") {
-        Renderer.renderItem(item)
-        println()
-      }
-    }
+    OutputService.displayUser(id, display)
   }
 }

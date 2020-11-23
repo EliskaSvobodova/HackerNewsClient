@@ -1,5 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
+import cz.cvut.fit.bioop.hackernewsclient.OutputService
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.commands.Command
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
@@ -14,20 +15,12 @@ trait StoriesCommand extends Command {
   protected var page = 1
   protected var pageSize = 10
 
-  def renderPage(storiesIds: Array[Int]): Unit = {
+  def renderPage(storiesIds: Array[Long]): Unit = {
     if ((page - 1) * pageSize > storiesIds.length) {
       println(
         Console.RED + "There are no more stories on page " + page + Console.RESET)
       return
     }
-    val range = Range((page - 1) * pageSize, page * pageSize)
-    for {
-      (numDisplayed, storyId) <- range zip storiesIds
-    } yield {
-      val item = ApiClient.getItem(storyId)
-      print(numDisplayed + ". ")
-      Renderer.renderItem(item)
-      println()
-    }
+    OutputService.displayPage(page, pageSize, storiesIds)
   }
 }

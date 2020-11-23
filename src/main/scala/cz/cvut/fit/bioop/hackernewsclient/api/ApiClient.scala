@@ -13,17 +13,17 @@ object ApiClient {
     ResponseParser.toUser(response)
   }
 
-  def getTopStories(): Array[Int] = {
+  def getTopStories(): Array[Long] = {
     val topStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/topstories.json")
     ResponseParser.toArrayOfStoriesIds(topStoriesIds)
   }
 
-  def getNewStories(): Array[Int] = {
+  def getNewStories(): Array[Long] = {
     val newStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/newstories.json")
     ResponseParser.toArrayOfStoriesIds(newStoriesIds)
   }
 
-  def getBestStories(): Array[Int] = {
+  def getBestStories(): Array[Long] = {
     val bestStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/beststories.json")
     ResponseParser.toArrayOfStoriesIds(bestStoriesIds)
   }

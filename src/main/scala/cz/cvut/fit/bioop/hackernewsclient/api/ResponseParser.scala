@@ -12,8 +12,8 @@ object ResponseParser {
     read[User](response)
   }
 
-  def toArrayOfStoriesIds(response: String): Array[Int] = {
+  def toArrayOfStoriesIds(response: String): Array[Long] = {
     val storyIds = response.substring(1, response.length - 1).split(",")
-    storyIds.map(id => id.toInt)
+    storyIds.map(id => id.toLong)
   }
 }
