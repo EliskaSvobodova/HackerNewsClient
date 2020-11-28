@@ -12,7 +12,12 @@ object Main {
 
   private val logger = Logger(getClass.getSimpleName)
 
-  private def appOptionsSplit(args: Array[String]): (Array[String], Array[String]) = {
+  /**
+   * Divides program arguments to app options and command with command options
+   * @param args program arguments
+   * @return two arrays: (app options, command with command options)
+   */
+  def appOptionsSplit(args: Array[String]): (Array[String], Array[String]) = {
     val splitIndex = args.indexWhere(arg => !arg.startsWith("--"))
     if(splitIndex == -1) // there are no commands
       return (args, Array[String]())
