@@ -10,7 +10,10 @@ case class Logger(className: String) {
   }
 
   def warning(message: String): Unit = {
-    logBuilder("WARNING", message, Console.RED)
+    logBuilder("WARNING", message, Console.YELLOW)
   }
 
+  def error(message: String): Unit = {
+    logBuilder("ERROR", message, Console.RED)
+  }
 }
