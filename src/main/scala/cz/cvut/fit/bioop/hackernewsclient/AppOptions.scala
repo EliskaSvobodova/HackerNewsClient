@@ -20,7 +20,6 @@ object AppOptions {
   def getHelp(): String = {
     var help = "[APPLICATION OPTIONS]\n"
     help += optionHelpBuilder("help", "displays help")
-    help += optionHelpBuilder("limitOfStories=[value]", "how many stories should be displayed at once")
     help
   }
 
@@ -29,7 +28,7 @@ object AppOptions {
   }
 }
 
-case class AppOptions(var help: Boolean = false, var limitOfStories: Int = 10) {
+case class AppOptions(var help: Boolean = false) {
   override def toString: String = {
     val fields = for {
       field <- getClass.getDeclaredFields
