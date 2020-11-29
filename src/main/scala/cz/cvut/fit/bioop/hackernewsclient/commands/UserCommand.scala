@@ -30,11 +30,8 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
       val options = getOptions
       OutputService.displayUser(options.id, options.display)
     } catch {
-      case e: IllegalArgumentException =>
-        Renderer.displayError(e.getMessage)
-      case _: HelpException =>
-        Renderer.renderHelp(UserCommand.help())
-        logger.info("UserCommand help")
+      case _: HelpException => Renderer.renderHelp(UserCommand.help())
+      case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
     }
   }
 
@@ -51,6 +48,7 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
         case "--polls" | "-p" => display.add("poll")
         case "--all" | "-a" => display = mutable.TreeSet("story", "comment", "job", "poll")
         case "--help" =>
+          logger.info("UserCommand help")
           throw new HelpException
         case unknown =>
           logger.error("Unknown option \"" + unknown + "\"")

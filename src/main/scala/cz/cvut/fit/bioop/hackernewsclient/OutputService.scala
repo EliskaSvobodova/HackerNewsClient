@@ -17,10 +17,8 @@ object OutputService {
    */
   def displayPage(page: Int, pageSize: Int, storiesIds: Array[Long]): Unit = {
     if (page <= 0 || pageSize <= 0 || (page - 1) * pageSize > storiesIds.length) {
-      Renderer.displayError("There are no more stories on page " + page + " " +
+      throw new IllegalArgumentException("There are no more stories on page " + page + " " +
         "(page size = " + pageSize + ", number of stories available = " + storiesIds.length + ")")
-      throw new IllegalArgumentException("Invalid page number [" + page + "] " +
-        "with page size [" + pageSize + "], number of stories = " + storiesIds.length)
     }
     val range = Range((page - 1) * pageSize, page * pageSize)
     for {

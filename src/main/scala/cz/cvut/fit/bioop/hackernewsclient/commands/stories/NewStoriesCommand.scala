@@ -2,7 +2,8 @@ package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.commands.CommandObject
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
+import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger, OutputService}
 
 object NewStoriesCommand extends CommandObject {
   override def help(): String = "Shows new stories from HackerNews"
@@ -14,14 +15,13 @@ class NewStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
 
   override def execute(): Unit = {
     logger.info("Executing NewStoriesCommand")
-    for(option <- commandOptions){
-      option match {
-        case pageRe(pageNum) => page = pageNum.toInt
-        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
-        case "--help" => NewStoriesCommand.help()
-        case unknown => printUnknownOption(unknown, NewStoriesCommand.name)
-      }
+    try{
+      val options = getOptions
+      OutputService.displayPage(options.page, options.pageSize, ApiClient.getNewStories())
+    } catch {
+      case _: HelpException => Renderer.renderHelp(NewStoriesCommand.help())
+      case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
+      case e: NoSuchElementException => Renderer.displayError(e.getMessage)
     }
-    renderPage(ApiClient.getNewStories())
   }
 }

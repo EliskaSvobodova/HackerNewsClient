@@ -1,9 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
-import cz.cvut.fit.bioop.hackernewsclient.OutputService
-import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.commands.Command
-import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
+import cz.cvut.fit.bioop.hackernewsclient.{HelpException, Logger}
 
 import scala.util.matching.Regex
 
@@ -12,15 +10,27 @@ trait StoriesCommand extends Command {
   protected val pageSizeRe: Regex = "--page-size=([0-9]+)".r
 
   // default values, can change according to command options
-  protected var page = 1
-  protected var pageSize = 10
+  private val logger = Logger(getClass.getSimpleName)
 
-  def renderPage(storiesIds: Array[Long]): Unit = {
-    if ((page - 1) * pageSize > storiesIds.length) {
-      println(
-        Console.RED + "There are no more stories on page " + page + Console.RESET)
-      return
+  case class Options(page: Int, pageSize: Int)
+  def getOptions: Options = {
+    var page = 1
+    var pageSize = 10
+
+    for(option <- commandOptions){
+      option match {
+        case pageRe(pageNum) => page = pageNum.toInt
+        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
+        case "--help" =>
+          logger.info("Displaying help for command")
+          throw new HelpException
+        case unknown =>
+          logger.error("\"Unknown option \"" + unknown + "\"")
+          throw new IllegalArgumentException("Unknown option \"" + unknown + "\", " +
+            "try hackernewsclient user --help for possible options")
+      }
     }
-    OutputService.displayPage(page, pageSize, storiesIds)
+
+    Options(page, pageSize)
   }
 }

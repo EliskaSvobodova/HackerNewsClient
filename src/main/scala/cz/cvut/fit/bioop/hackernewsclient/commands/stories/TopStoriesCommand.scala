@@ -2,7 +2,8 @@ package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.commands.CommandObject
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger, OutputService}
+import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger, OutputService}
 
 
 object TopStoriesCommand extends CommandObject {
@@ -15,19 +16,13 @@ class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
 
   override def execute(): Unit = {
     logger.info("Executing TopStoriesCommand")
-    for(option <- commandOptions){
-      option match {
-        case pageRe(pageNum) => page = pageNum.toInt
-        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
-        case "--help" => TopStoriesCommand.help()
-        case unknown => printUnknownOption(unknown, TopStoriesCommand.name)
-      }
-    }
-    // renderPage(ApiClient.getTopStories())
-    try {
-      OutputService.displayPage(page, pageSize, ApiClient.getTopStories())
+    try{
+      val options = getOptions
+      OutputService.displayPage(options.page, options.pageSize, ApiClient.getTopStories())
     } catch {
-      case e: IllegalArgumentException => logger.error(e.getMessage)
+      case _: HelpException => Renderer.renderHelp(TopStoriesCommand.help())
+      case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
+      case e: NoSuchElementException => Renderer.displayError(e.getMessage)
     }
   }
 }

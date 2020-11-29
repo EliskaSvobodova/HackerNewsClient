@@ -1,13 +1,10 @@
 package cz.cvut.fit.bioop.hackernewsclient.renderers
 import java.sql.Date
 
-import cz.cvut.fit.bioop.hackernewsclient.Logger
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 
 
 class StdoutRenderer extends Renderer {
-  private val logger = Logger(getClass.getSimpleName)
-
   override def renderItem(item: Item): Unit = {
     item.itemType match {
       case "comment" => renderComment(item)

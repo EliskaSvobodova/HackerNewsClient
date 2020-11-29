@@ -2,7 +2,8 @@ package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
 import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.commands.CommandObject
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
+import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger, OutputService}
 
 object BestStoriesCommand extends CommandObject {
   override def help(): String = "Shows best stories from HackerNews"
@@ -14,14 +15,13 @@ class BestStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[S
 
   override def execute(): Unit = {
     logger.info("Executing BestStoriesCommand")
-    for(option <- commandOptions){
-      option match {
-        case pageRe(pageNum) => page = pageNum.toInt
-        case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
-        case "--help" => BestStoriesCommand.help()
-        case unknown => printUnknownOption(unknown, BestStoriesCommand.name)
-      }
+    try{
+      val options = getOptions
+      OutputService.displayPage(options.page, options.pageSize, ApiClient.getBestStories())
+    } catch {
+      case _: HelpException => Renderer.renderHelp(BestStoriesCommand.help())
+      case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
+      case e: NoSuchElementException => Renderer.displayError(e.getMessage)
     }
-    renderPage(ApiClient.getBestStories())
   }
 }
