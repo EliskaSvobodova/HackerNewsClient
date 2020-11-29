@@ -30,6 +30,10 @@ class StdoutRenderer extends Renderer {
     println(user.submitted.length + " items")
   }
 
+  override def renderHelp(message: String): Unit = {
+    print(message)
+  }
+
   override def displayError(message: String): Unit = {
     println(Console.RED + message + Console.RESET)
   }

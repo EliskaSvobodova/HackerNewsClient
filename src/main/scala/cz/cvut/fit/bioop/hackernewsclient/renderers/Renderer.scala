@@ -13,6 +13,10 @@ object Renderer {
     renderer.renderUser(user)
   }
 
+  def renderHelp(message: String): Unit = {
+    renderer.renderHelp(message)
+  }
+
   def displayError(message: String): Unit = {
     renderer.displayError(message)
   }
@@ -21,5 +25,6 @@ object Renderer {
 trait Renderer {
   def renderItem(item: Item)
   def renderUser(user: User)
+  def renderHelp(message: String)
   def displayError(message: String)
 }
