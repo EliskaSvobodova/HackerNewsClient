@@ -13,6 +13,8 @@ object ResponseParser {
   }
 
   def toArrayOfStoriesIds(response: String): Array[Long] = {
+    if(response == "[]")
+      throw new IllegalArgumentException("Empty response")
     val storyIds = response.substring(1, response.length - 1).split(",")
     storyIds.map(id => id.toLong)
   }

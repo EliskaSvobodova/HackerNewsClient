@@ -4,7 +4,7 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 
 object ApiClient {
   def getItem(id: Long): Option[Item] = {
-    val response = RequestUrl.get("https://hacker-news.firebaseio.com/v0/item/" + id + ".json?print=pretty")
+    val response = RequestUrl.get("https://hacker-news.firebaseio.com/v0/item/" + id + ".json")
     Option(ResponseParser.toItem(response))
   }
 
