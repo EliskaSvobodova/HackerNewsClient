@@ -6,13 +6,15 @@ import cz.cvut.fit.bioop.hackernewsclient.{HelpException, Logger}
 import scala.util.matching.Regex
 
 trait StoriesCommand extends Command {
-  protected val pageRe: Regex = "--page=([0-9]+)".r
-  protected val pageSizeRe: Regex = "--page-size=([0-9]+)".r
+
+  private val pageRe: Regex = "--page=([0-9]+)".r
+  private val pageSizeRe: Regex = "--page-size=([0-9]+)".r
 
   // default values, can change according to command options
   private val logger = Logger(getClass.getSimpleName)
 
   case class Options(page: Int, pageSize: Int)
+
   def getOptions: Options = {
     var page = 1
     var pageSize = 10
@@ -27,7 +29,7 @@ trait StoriesCommand extends Command {
         case unknown =>
           logger.error("\"Unknown option \"" + unknown + "\"")
           throw new IllegalArgumentException("Unknown option \"" + unknown + "\", " +
-            "try hackernewsclient user --help for possible options")
+            "try hackernewsclient --help for possible options")
       }
     }
 
