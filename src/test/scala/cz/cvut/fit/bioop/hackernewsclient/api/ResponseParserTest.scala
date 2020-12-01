@@ -6,7 +6,7 @@ class ResponseParserTest extends AnyFunSuite {
 
   test("testToItem") {
     val testResponse = "{\"by\":\"dhouston\",\"descendants\":71,\"id\":8863,\"kids\":[9224,8917],\"score\":104,\"time\":1175714200,\"title\":\"My YC app: Dropbox - Throw away your USB drive\",\"type\":\"story\",\"url\":\"http://www.getdropbox.com/u/2/screencast.html\"}"
-    val item = ResponseParser.toItem(testResponse)
+    val item = ResponseParser.toItem(testResponse).get
     assert(item.id == 8863)
     assert(!item.deleted)
     assert(item.itemType == "story")
@@ -40,7 +40,7 @@ class ResponseParserTest extends AnyFunSuite {
 
   test("testToUser") {
     val testResponse = "{\"about\":\"http://norvig.com\",\"created\":1190398535,\"id\":\"norvig\",\"karma\":690,\"submitted\":[22072713,18144213,17832839,10328571,10328326]}"
-    val user = ResponseParser.toUser(testResponse)
+    val user = ResponseParser.toUser(testResponse).get
     assert(user.id == "norvig")
     assert(user.delay == -1)
     assert(user.created == 1190398535)
