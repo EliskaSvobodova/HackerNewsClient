@@ -20,14 +20,10 @@ object OutputService {
       throw new IllegalArgumentException("There are no more stories on page " + page + " " +
         "(page size = " + pageSize + ", number of stories available = " + storiesIds.length + ")")
     }
-    val range = Range((page - 1) * pageSize, page * pageSize)
-    for {
-      (_, storyId) <- range zip storiesIds
-    } yield {
+    for (storyId <- storiesIds.slice((page - 1) * pageSize, page * pageSize)) {
       val itemOpt = ApiClient.getItem(storyId)
-      if(itemOpt.isEmpty)
-        throw new NoSuchElementException("Item with id " + storyId + " doesn't exist")
-      Renderer.renderItem(itemOpt.get)
+      if(itemOpt.isDefined)
+        Renderer.renderItem(itemOpt.get)
     }
   }
 
@@ -39,7 +35,6 @@ object OutputService {
   def displayUser(userId: String, display: mutable.TreeSet[String]): Unit = {
     val userOpt = ApiClient.getUser(userId)
     if(userOpt.isEmpty){
-      Renderer.displayError("User " + userId + " doesn't exist")
       throw new NoSuchElementException("User " + userId + " doesn't exist")
     }
     val user = userOpt.get
@@ -53,5 +48,25 @@ object OutputService {
         if(!item.deleted && display.contains(item.itemType))
           Renderer.renderItem(item)
       }
+  }
+
+  def displayItemWithComments(itemId: Long, page: Int, pageSize: Int): Unit = {
+    val itemOpt = ApiClient.getItem(itemId)
+    if(itemOpt.isEmpty){
+      throw new NoSuchElementException("Item " + itemId + " doesn't exist")
+    }
+    val item = itemOpt.get
+    Renderer.renderItem(item)
+
+    if (page <= 0 || pageSize <= 0 || (page - 1) * pageSize > item.kids.length) {
+      throw new IllegalArgumentException("There are no more comments on page " + page + " " +
+        "(page size = " + pageSize + ", number of comments available = " + item.kids.length + ")")
+    }
+
+    for(commentId <- item.kids.slice((page - 1) * pageSize, page * pageSize)) {
+      val commentOpt = ApiClient.getItem(commentId)
+      if(commentOpt.isDefined && !commentOpt.get.deleted)
+        Renderer.renderItem(commentOpt.get)
+    }
   }
 }

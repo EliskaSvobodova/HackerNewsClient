@@ -21,7 +21,6 @@ class TopStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[St
     } catch {
       case _: HelpException => Renderer.renderHelp(TopStoriesCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
-      case e: NoSuchElementException => Renderer.displayError(e.getMessage)
     }
   }
 }

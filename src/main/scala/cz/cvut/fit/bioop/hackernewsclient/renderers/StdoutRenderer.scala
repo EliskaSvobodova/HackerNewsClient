@@ -62,7 +62,7 @@ class StdoutRenderer extends Renderer {
   }
 
   private def renderStats(item: Item): Unit = {
-    println(item.score + " points, by " + item.by + " | " + item.descendants + " comments\n")
+    println("item id: " + item.id + ", " + item.score + " points, by " + item.by + " | " + item.descendants + " comments\n")
   }
 
   private def renderTime(time: Long): Unit = {

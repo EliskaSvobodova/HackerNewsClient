@@ -20,7 +20,6 @@ class BestStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[S
     } catch {
       case _: HelpException => Renderer.renderHelp(BestStoriesCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
-      case e: NoSuchElementException => Renderer.displayError(e.getMessage)
     }
   }
 }

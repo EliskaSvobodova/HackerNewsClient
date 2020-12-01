@@ -8,7 +8,7 @@ import scala.collection.mutable
 
 object UserCommand extends CommandObject {
   override def help(): String = buildHelp(name, "Fetches user's data", ListMap(
-      "--id=[value]" -> "username of the user to fetch, value cannot be empty and has to contain only a-z, A-Z, 0-9, _",
+      "--id=[value]" -> "username of the user to fetch, value cannot be empty and has to contain only a-z, A-Z, 0-9, _, COMPULSORY OPTION",
       "--stories or -s" -> "display all stories by specified user",
       "--comments or -c" -> "display all comments by specified user",
       "--jobs or -j" -> "display all jobs by specified user",
@@ -22,6 +22,7 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
   private val logger = Logger(getClass.getSimpleName)
 
   private val idRe = "--id=([a-zA-Z0-9_]*)".r
+
   case class Options(id: String, display: mutable.TreeSet[String])
 
   override def execute(): Unit = {
@@ -32,6 +33,7 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
     } catch {
       case _: HelpException => Renderer.renderHelp(UserCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
+      case e: NoSuchElementException => Renderer.displayError(e.getMessage)
     }
   }
 
