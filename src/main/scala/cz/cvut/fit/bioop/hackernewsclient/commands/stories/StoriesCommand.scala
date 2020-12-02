@@ -42,7 +42,7 @@ trait StoriesCommand extends Command {
         case unknown =>
           logger.error("\"Unknown option \"" + unknown + "\"")
           throw new IllegalArgumentException("Unknown option \"" + unknown + "\", "
-                                              + "try hackernewsclient --help for possible options")
+            + "try hackernewsclient --help for possible options")
       }
     }
 

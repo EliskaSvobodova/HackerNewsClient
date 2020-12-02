@@ -27,29 +27,6 @@ object OutputService {
     }
   }
 
-  /**
-   * Displays user's information and then fetches user's items one at a time according to display parameter
-   * @param userId user that should be displayed
-   * @param display TreeSet of strings with item types that should be displayed (ex. "story", "comment")
-   */
-  def displayUser(userId: String, display: mutable.TreeSet[String]): Unit = {
-    val userOpt = ApiClient.getUser(userId)
-    if(userOpt.isEmpty){
-      throw new NoSuchElementException("User " + userId + " doesn't exist")
-    }
-    val user = userOpt.get
-    Renderer.renderUser(user)
-    if(display.nonEmpty)
-      for(itemId <- user.submitted){
-        val itemOpt = ApiClient.getItem(itemId)
-        if(itemOpt.isEmpty)
-          throw new NoSuchElementException("User's item with id " + itemId + " doesn't exist")
-        val item = itemOpt.get
-        if(!item.deleted && display.contains(item.itemType))
-          Renderer.renderItem(item)
-      }
-  }
-
   def displayItemWithComments(itemId: Long, page: Int, pageSize: Int): Unit = {
     val itemOpt = ApiClient.getItem(itemId)
     if(itemOpt.isEmpty){

@@ -17,7 +17,7 @@ object AppOptions {
     appOptions
   }
 
-  def getHelp(): String = {
+  def getHelp: String = {
     var help = "[APPLICATION OPTIONS]\n"
     help += optionHelpBuilder("help", "displays help")
     help

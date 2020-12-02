@@ -1,6 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
 
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
+import cz.cvut.fit.bioop.hackernewsclient.services.UserService
 import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger, OutputService}
 
 import scala.collection.immutable.ListMap
@@ -23,13 +24,14 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
 
   private val idRe = "--id=([a-zA-Z0-9_]*)".r
 
-  case class Options(id: String, display: mutable.TreeSet[String])
+  case class UserOptions(id: String, display: mutable.TreeSet[String])
 
   override def execute(): Unit = {
     logger.info("Executing UserCommand")
     try{
       val options = getOptions
-      OutputService.displayUser(options.id, options.display)
+      val user = UserService.displayUser(options.id)
+      UserService.displayUserContribs(user, options.display)
     } catch {
       case _: HelpException => Renderer.renderHelp(UserCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
@@ -37,13 +39,15 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
     }
   }
 
-  def getOptions: Options = {
+  def getOptions: UserOptions = {
     var id = ""
     var display = mutable.TreeSet[String]()
 
     for(option <- commandOptions) {
       option match {
-        case idRe(givenId) => id = givenId
+        case idRe(givenId) =>
+          logger.info("Changing user id from " + id + " to " + givenId)
+          id = givenId
         case "--stories" | "-s" => display.add("story")
         case "--comments" | "-c" => display.add("comment")
         case "--jobs" | "-j" => display.add("job")
@@ -59,12 +63,12 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
       }
     }
 
-    if(id.length == 0){
+    if(id.isEmpty){
       logger.error("Missing compulsory option --id=[value]")
       throw new IllegalArgumentException("Missing compulsory option --id=[value], " +
         "fill a user name instead of [value]")
     }
 
-    Options(id, display)
+    UserOptions(id, display)
   }
 }

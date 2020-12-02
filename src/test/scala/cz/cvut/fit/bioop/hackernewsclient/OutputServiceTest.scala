@@ -28,12 +28,4 @@ class OutputServiceTest extends AnyFunSuite {
     }
     assert(thrownPageSize.getMessage === "There are no more stories on page 1 (page size = -1, number of stories available = 3)")
   }
-
-  test("displayUser exception when user doesn't exist") {
-    val nonExistentUser = "somebodyThatHopefullyDoesntExist256315722457"
-    val thrown = intercept[NoSuchElementException] {
-      OutputService.displayUser(nonExistentUser, mutable.TreeSet())
-    }
-    assert(thrown.getMessage == "User " + nonExistentUser + " doesn't exist")
-  }
 }
