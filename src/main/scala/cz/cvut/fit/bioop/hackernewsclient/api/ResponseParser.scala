@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.api
 
-import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
+import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import upickle.default.read
 
 object ResponseParser {
@@ -10,6 +10,10 @@ object ResponseParser {
 
   def toUser(response: String): Option[User] = {
     Option(read[User](response))
+  }
+
+  def toUpdates(response: String): Updates = {
+    read[Updates](response)
   }
 
   def toArrayOfStoriesIds(response: String): Array[Long] = {

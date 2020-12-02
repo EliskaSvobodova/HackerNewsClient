@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.api
 
-import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
+import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
 import cz.cvut.fit.bioop.hackernewsclient.commands.stories.{BestStoriesCommand, NewStoriesCommand, TopStoriesCommand}
 
@@ -22,26 +22,21 @@ object ApiClient {
   }
 
   def getTopStories(): Array[Long] = {
-    val storiesOpt = Cache.getStories(TopStoriesCommand.name)
-    if(storiesOpt.isDefined)
-      return storiesOpt.get
     val topStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/topstories.json")
     ResponseParser.toArrayOfStoriesIds(topStoriesIds)
   }
 
   def getNewStories(): Array[Long] = {
-    val storiesOpt = Cache.getStories(NewStoriesCommand.name)
-    if(storiesOpt.isDefined)
-      return storiesOpt.get
     val newStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/newstories.json")
     ResponseParser.toArrayOfStoriesIds(newStoriesIds)
   }
 
   def getBestStories(): Array[Long] = {
-    val storiesOpt = Cache.getStories(BestStoriesCommand.name)
-    if(storiesOpt.isDefined)
-      return storiesOpt.get
     val bestStoriesIds = RequestUrl.get("https://hacker-news.firebaseio.com/v0/beststories.json")
     ResponseParser.toArrayOfStoriesIds(bestStoriesIds)
+  }
+
+  def getUpdates(): Updates = {
+    ResponseParser.toUpdates(RequestUrl.get("https://hacker-news.firebaseio.com/v0/updates.json"))
   }
 }
