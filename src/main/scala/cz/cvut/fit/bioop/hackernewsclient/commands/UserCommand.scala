@@ -2,7 +2,7 @@ package cz.cvut.fit.bioop.hackernewsclient.commands
 
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 import cz.cvut.fit.bioop.hackernewsclient.services.UserService
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger, OutputService}
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger}
 
 import scala.collection.immutable.ListMap
 import scala.collection.mutable

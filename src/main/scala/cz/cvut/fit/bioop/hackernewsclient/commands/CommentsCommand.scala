@@ -1,6 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
+import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.Item
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger, OutputService}
+import cz.cvut.fit.bioop.hackernewsclient.services.ItemService
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger}
 
 import scala.collection.immutable.ListMap
 import scala.util.matching.Regex
@@ -26,7 +28,8 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
     logger.info("Executing CommentsCommand")
     try{
       val options = getOptions
-      OutputService.displayItemWithComments(options.id, options.page, options.pageSize)
+      val mainItem: Item = ItemService.displayItem(options.id)
+      ItemService.displayPage(options.page, options.pageSize, mainItem.kids)
     } catch {
       case _: HelpException => Renderer.renderHelp(CommentsCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
