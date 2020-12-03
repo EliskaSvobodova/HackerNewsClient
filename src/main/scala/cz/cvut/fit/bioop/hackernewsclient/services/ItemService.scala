@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.services
 
-import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
+import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.Item
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 
@@ -14,7 +14,7 @@ object ItemService {
    * @param pageSize how many items page should contain
    * @param itemsIds array of all item ids, stories will be chosen from it according to page and pageSize
    */
-  def displayPage(page: Int, pageSize: Int, itemsIds: Array[Long]): Array[Item] = {
+  def displayPageOfItems(page: Int, pageSize: Int, itemsIds: Array[Long]): Array[Item] = {
     if (page <= 0 || pageSize <= 0 || (page - 1) * pageSize > itemsIds.length) {
       throw new IllegalArgumentException("There are no more items on page " + page + " " +
         "(page size = " + pageSize + ", number of stories available = " + itemsIds.length + ")")

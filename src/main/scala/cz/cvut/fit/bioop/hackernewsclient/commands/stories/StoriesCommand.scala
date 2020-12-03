@@ -18,7 +18,7 @@ trait StoriesCommand extends Command {
   protected def execute(storiesObj: StoriesCommandObject): Unit = {
     try{
       val options = getOptions
-      ItemService.displayPage(options.page, options.pageSize, storiesObj.data)
+      ItemService.displayPageOfItems(options.page, options.pageSize, storiesObj.data)
     } catch {
       case _: HelpException => Renderer.renderHelp(storiesObj.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)

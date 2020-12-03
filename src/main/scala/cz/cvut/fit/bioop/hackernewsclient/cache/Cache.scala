@@ -1,7 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient.cache
 
+import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
-import cz.cvut.fit.bioop.hackernewsclient.api.{ApiClient, ResponseParser, ResponseRenderer}
+import cz.cvut.fit.bioop.hackernewsclient.api.{ResponseParser, ResponseRenderer}
 
 import java.io.{File, FileWriter}
 import scala.collection.mutable
@@ -15,7 +16,7 @@ object Cache {
   private val storePattern = ("([^~]+)" + divider + "(.+)").r
 
   def getItem(id: Long): Option[Item] = {
-    if(ApiClient.getUpdates().items.contains(id))
+    if(ApiClient.getUpdates.items.contains(id))
       return None
     if(getClass.getClassLoader.getResource(itemsFile) != null){
       val r = ("^" + id + divider + "(.*)").r

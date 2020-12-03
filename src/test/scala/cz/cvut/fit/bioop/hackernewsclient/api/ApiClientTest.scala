@@ -1,5 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.api
 
+import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import org.scalatest.funsuite.AnyFunSuite
 
 class ApiClientTest extends AnyFunSuite {

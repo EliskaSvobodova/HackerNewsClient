@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.services
 
-import cz.cvut.fit.bioop.hackernewsclient.api.ApiClient
+import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 
