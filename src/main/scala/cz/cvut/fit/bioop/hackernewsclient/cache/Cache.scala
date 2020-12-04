@@ -2,7 +2,8 @@ package cz.cvut.fit.bioop.hackernewsclient.cache
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
-import cz.cvut.fit.bioop.hackernewsclient.api.{ResponseParser, ResponseRenderer}
+import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.{ResponseReader, UPickleResponseReader}
+import cz.cvut.fit.bioop.hackernewsclient.api.responseWriters.{ResponseWriter, UPickleResponseWriter}
 
 import java.io.{File, FileWriter}
 import scala.collection.mutable
@@ -23,7 +24,7 @@ object Cache {
       val items = Source.fromResource(itemsFile).getLines
       for(item <- items) {
         item match{
-          case r(rest) => return ResponseParser.toItem(rest)
+          case r(rest) => return ResponseReader.toItem(rest)
           case _ =>
         }
       }
@@ -37,7 +38,7 @@ object Cache {
       val users = Source.fromResource(usersFile).getLines
       for(user <- users) {
         user match{
-          case r(rest) => return ResponseParser.toUser(rest)
+          case r(rest) => return ResponseReader.toUser(rest)
           case _ =>
         }
       }
@@ -49,14 +50,14 @@ object Cache {
     if(getClass.getClassLoader.getResource(itemsFile) == null){
       // create new cache file with new items
       val writer = new FileWriter(new File(itemsFile ))
-      val itemsToBeCached = for(item <- items) yield item.id + divider + ResponseRenderer.fromItem(item)
+      val itemsToBeCached = for(item <- items) yield item.id + divider + ResponseWriter.fromItem(item)
       writeToCacheFile(itemsToBeCached, writer)
       writer.close()
     } else {
       val itemsToBeCached = removeDuplicates(items)
 
       val fileWriter = new FileWriter(new File(itemsFile), true)
-      writeToCacheFile(itemsToBeCached.map(item => item.id + divider + ResponseRenderer.fromItem(item)), fileWriter)
+      writeToCacheFile(itemsToBeCached.map(item => item.id + divider + ResponseWriter.fromItem(item)), fileWriter)
       fileWriter.close()
     }
   }

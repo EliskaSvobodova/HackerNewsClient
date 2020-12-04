@@ -1,7 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient.api.apiClients
 
-import cz.cvut.fit.bioop.hackernewsclient.api.ResponseParser
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
+import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.{ResponseReader, UPickleResponseReader}
 import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
 
 import scala.io.Source
@@ -14,7 +14,7 @@ class V0ApiClient extends ApiClient {
     if(itemOpt.isDefined)
       return itemOpt
     val response = get(baseUrl + "item/" + id + ".json")
-    ResponseParser.toItem(response)
+    ResponseReader.toItem(response)
   }
 
   override def getUser(id: String): Option[User] = {
@@ -22,26 +22,26 @@ class V0ApiClient extends ApiClient {
     if(userOpt.isDefined)
       return userOpt
     val response = get(baseUrl + "user/" + id + ".json")
-    ResponseParser.toUser(response)
+    ResponseReader.toUser(response)
   }
 
   override def getTopStories: Array[Long] = {
     val topStoriesIds = get(baseUrl + "topstories.json")
-    ResponseParser.toArrayOfStoriesIds(topStoriesIds)
+    ResponseReader.toArrayOfItemIds(topStoriesIds)
   }
 
   override def getNewStories: Array[Long] = {
     val newStoriesIds = get(baseUrl + "newstories.json")
-    ResponseParser.toArrayOfStoriesIds(newStoriesIds)
+    ResponseReader.toArrayOfItemIds(newStoriesIds)
   }
 
   override def getBestStories: Array[Long] = {
     val bestStoriesIds = get(baseUrl + "beststories.json")
-    ResponseParser.toArrayOfStoriesIds(bestStoriesIds)
+    ResponseReader.toArrayOfItemIds(bestStoriesIds)
   }
 
   override def getUpdates: Updates = {
-    ResponseParser.toUpdates(get(baseUrl + "updates.json"))
+    ResponseReader.toUpdates(get(baseUrl + "updates.json"))
   }
 
   private def get(url: String) = {

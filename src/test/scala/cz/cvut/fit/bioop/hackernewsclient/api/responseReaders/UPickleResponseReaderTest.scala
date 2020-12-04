@@ -1,12 +1,11 @@
-package cz.cvut.fit.bioop.hackernewsclient.api
+package cz.cvut.fit.bioop.hackernewsclient.api.responseReaders
 
 import org.scalatest.funsuite.AnyFunSuite
 
-class ResponseParserTest extends AnyFunSuite {
-
+class UPickleResponseReaderTest extends AnyFunSuite {
   test("testToItem") {
     val testResponse = "{\"by\":\"dhouston\",\"descendants\":71,\"id\":8863,\"kids\":[9224,8917],\"score\":104,\"time\":1175714200,\"title\":\"My YC app: Dropbox - Throw away your USB drive\",\"type\":\"story\",\"url\":\"http://www.getdropbox.com/u/2/screencast.html\"}"
-    val item = ResponseParser.toItem(testResponse).get
+    val item = ResponseReader.toItem(testResponse).get
     assert(item.id == 8863)
     assert(!item.deleted)
     assert(item.itemType == "story")
@@ -26,21 +25,21 @@ class ResponseParserTest extends AnyFunSuite {
 
   test("testToArrayOfStoriesIds with elements") {
     val testResponse = "[1,2,33,123]"
-    val ids = ResponseParser.toArrayOfStoriesIds(testResponse)
+    val ids = ResponseReader.toArrayOfItemIds(testResponse)
     assert(ids sameElements Array(1, 2, 33, 123))
   }
 
   test("testToArrayOfStoriesIds empty") {
     val testResponse = "[]"
     val thrown = intercept[IllegalArgumentException]{
-      ResponseParser.toArrayOfStoriesIds(testResponse)
+      ResponseReader.toArrayOfItemIds(testResponse)
     }
     assert(thrown.getMessage == "Empty response")
   }
 
   test("testToUser") {
     val testResponse = "{\"about\":\"http://norvig.com\",\"created\":1190398535,\"id\":\"norvig\",\"karma\":690,\"submitted\":[22072713,18144213,17832839,10328571,10328326]}"
-    val user = ResponseParser.toUser(testResponse).get
+    val user = ResponseReader.toUser(testResponse).get
     assert(user.id == "norvig")
     assert(user.delay == -1)
     assert(user.created == 1190398535)
@@ -48,5 +47,4 @@ class ResponseParserTest extends AnyFunSuite {
     assert(user.about == "http://norvig.com")
     assert(user.submitted sameElements Array(22072713,18144213,17832839,10328571,10328326))
   }
-
 }
