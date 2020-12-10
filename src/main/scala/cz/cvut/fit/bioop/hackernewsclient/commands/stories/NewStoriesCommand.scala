@@ -1,7 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, Logger}
+import cz.cvut.fit.bioop.hackernewsclient.AppOptions
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 object NewStoriesCommand extends StoriesCommandObject {
   override def help(): String = buildHelp(name, "Shows new stories from HackerNews", helpOptions)

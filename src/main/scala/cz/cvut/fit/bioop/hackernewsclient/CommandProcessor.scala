@@ -1,7 +1,10 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
+
 object CommandProcessor {
   def process(appOptions: AppOptions, args: Array[String]): Unit = {
+    Logger.minSeverity = appOptions.log
     if(appOptions.help)
       println(getHelp)
     else if(args.length != 0) {

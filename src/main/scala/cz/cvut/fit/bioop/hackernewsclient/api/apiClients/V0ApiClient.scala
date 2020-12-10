@@ -1,9 +1,9 @@
 package cz.cvut.fit.bioop.hackernewsclient.api.apiClients
 
-import cz.cvut.fit.bioop.hackernewsclient.Logger
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.{ResponseReader, UPickleResponseReader}
 import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 import scala.io.Source
 

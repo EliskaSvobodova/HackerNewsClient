@@ -3,7 +3,8 @@ package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 import cz.cvut.fit.bioop.hackernewsclient.commands.Command
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 import cz.cvut.fit.bioop.hackernewsclient.services.ItemService
-import cz.cvut.fit.bioop.hackernewsclient.{HelpException, Logger}
+import cz.cvut.fit.bioop.hackernewsclient.HelpException
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 import scala.util.matching.Regex
 

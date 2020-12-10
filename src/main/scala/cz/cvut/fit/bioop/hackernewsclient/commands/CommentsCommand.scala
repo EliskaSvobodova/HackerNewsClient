@@ -1,8 +1,9 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.Item
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 import cz.cvut.fit.bioop.hackernewsclient.services.ItemService
-import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException, Logger}
+import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException}
 
 import scala.collection.immutable.ListMap
 import scala.util.matching.Regex

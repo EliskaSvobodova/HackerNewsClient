@@ -1,10 +1,10 @@
 package cz.cvut.fit.bioop.hackernewsclient.cache
 
-import cz.cvut.fit.bioop.hackernewsclient.Logger
 import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.api.responseWriters.ResponseWriter
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 import java.io.{File, FileWriter}
 import scala.io.Source

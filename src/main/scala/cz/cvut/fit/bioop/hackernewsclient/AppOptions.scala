@@ -1,5 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
+import cz.cvut.fit.bioop.hackernewsclient.logger.{Logger, LoggerSeverity}
+
 object AppOptions {
   /**
    * Reads top application options and creates AppOptions according to them
@@ -7,11 +9,13 @@ object AppOptions {
    * @param args all app's arguments
    * @return filled out AppOptions
    */
+
   def parseAppOptions(args: Array[String]): AppOptions = {
     val appOptions = AppOptions()
     for(arg <- args)
       arg match {
         case "--help" => appOptions.help = true
+        case Logger.severityRe(severity) => appOptions.log = LoggerSeverity.withName(severity)
         case _ => throw new IllegalArgumentException("Unknown application option, try --help for possible options")
       }
     appOptions
@@ -20,6 +24,7 @@ object AppOptions {
   def getHelp: String = {
     var help = "[APPLICATION OPTIONS]\n"
     help += optionHelpBuilder("help", "displays help")
+    help += optionHelpBuilder("log", "what message severity should be logged")
     help
   }
 
@@ -28,7 +33,7 @@ object AppOptions {
   }
 }
 
-case class AppOptions(var help: Boolean = false) {
+case class AppOptions(var help: Boolean = false, var log: LoggerSeverity.Value = LoggerSeverity.info) {
   override def toString: String = {
     val fields = for {
       field <- getClass.getDeclaredFields
