@@ -4,6 +4,7 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 
 trait ApiClient {
   def getItem(id: Long): Option[Item]
+  def getItems(ids: Array[Long]): Array[Item]
   def getUser(id: String): Option[User]
   def getTopStories: Array[Long]
   def getNewStories: Array[Long]
@@ -16,6 +17,10 @@ object ApiClient extends ApiClient {
 
   def getItem(id: Long): Option[Item] = {
     apiClient.getItem(id)
+  }
+
+  def getItems(ids: Array[Long]): Array[Item] = {
+    apiClient.getItems(ids)
   }
 
   def getUser(id: String): Option[User] = {
