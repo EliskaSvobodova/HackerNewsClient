@@ -1,8 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient.renderers
-import cz.cvut.fit.bioop.hackernewsclient.HtmlConverter
 
 import java.sql.Date
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
+import cz.cvut.fit.bioop.hackernewsclient.renderers.html.HtmlConverter
 
 
 class StdoutRenderer extends Renderer {

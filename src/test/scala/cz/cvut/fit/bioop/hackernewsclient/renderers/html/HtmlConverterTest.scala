@@ -1,4 +1,4 @@
-package cz.cvut.fit.bioop.hackernewsclient
+package cz.cvut.fit.bioop.hackernewsclient.renderers.html
 
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -44,14 +44,14 @@ class HtmlConverterTest extends AnyFunSuite {
     val htmlConverter = new HtmlConverter()
     val res = htmlConverter.convertTags("something before <b>BOLD</b> the end.")
     println("Testing html converter - bold: " + res)
-    assert(res == "something before \u001b[1mBOLD\u001b[0m the end.")
+    assert(res == "something before \u001b[0m\u001b[1mBOLD\u001b[0m the end.")
   }
 
   test("testConvertTags italics") {
     val htmlConverter = new HtmlConverter()
     val res = htmlConverter.convertTags("something before <i>ITALICS</i> the end.")
     println("Testing html converter - italics: " + res)
-    assert(res == "something before \u001b[3mITALICS\u001b[0m the end.")
+    assert(res == "something before \u001b[0m\u001b[3mITALICS\u001b[0m the end.")
   }
 
   test("testConvertTags paragraph") {
@@ -66,5 +66,12 @@ class HtmlConverterTest extends AnyFunSuite {
     val res = htmlConverter.convertTags("<f>some </f>other <raf>tags<ehm>.")
     println("Testing html converter - other tags: " + res)
     assert(res == "some other tags.")
+  }
+
+  test("testConvertTags combination of tags") {
+    val htmlConverter = new HtmlConverter()
+    val res = htmlConverter.convertTags("something before <i>ITALIAN but also <b>BOLD</b> with italics end</i>")
+    println("Testing html converter - combination of tags: " + res)
+    assert(res == "something before \u001b[0m\u001b[3mITALIAN but also \u001b[0m\u001b[3;1mBOLD\u001b[0m\u001b[3m with italics end\u001b[0m")
   }
 }
