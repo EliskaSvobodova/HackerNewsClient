@@ -1,6 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient.renderers
-import java.sql.Date
+import cz.cvut.fit.bioop.hackernewsclient.HtmlConverter
 
+import java.sql.Date
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 
 
@@ -22,7 +23,7 @@ class StdoutRenderer extends Renderer {
     print("karma:     ")
     println(user.karma)
     print("about:     ")
-    println(user.about)
+    renderHtml(user.about)
     print("submitted: ")
     println(user.submitted.length + " items")
   }
@@ -46,12 +47,12 @@ class StdoutRenderer extends Renderer {
 
   private def renderComment(item: Item): Unit = {
     printBold("Comment: ")
-    println(item.text)
+    renderHtml(item.text)
     renderStats(item)  }
 
   private def renderJob(item: Item): Unit = {
     printBold("Job: " + item.title)
-    println(item.text)
+    renderHtml(item.text)
     renderTime(item.time)
     renderStats(item)
   }
@@ -67,5 +68,10 @@ class StdoutRenderer extends Renderer {
 
   private def renderTime(time: Long): Unit = {
     println(if(time != -1) new Date(time * 1000) else "<unknown>")
+  }
+
+  private def renderHtml(text: String): Unit = {
+    val htmlConverter = new HtmlConverter()
+    htmlConverter.printHtml(text)
   }
 }
