@@ -9,9 +9,8 @@ object AppOptions {
    * @param args all app's arguments
    * @return filled out AppOptions
    */
-
-  def parseAppOptions(args: Array[String]): AppOptions = {
-    val appOptions = AppOptions()
+  def apply(args: Array[String]): AppOptions = {
+    val appOptions = new AppOptions()
     for(arg <- args)
       arg match {
         case "--help" => appOptions.help = true
@@ -35,9 +34,7 @@ object AppOptions {
 
 case class AppOptions(var help: Boolean = false, var log: LoggerSeverity.Value = LoggerSeverity.info) {
   override def toString: String = {
-    val fields = for {
-      field <- getClass.getDeclaredFields
-    } yield field.getName + " = " + field.get(this)
+    val fields = for { field <- getClass.getDeclaredFields } yield field.getName + " = " + field.get(this)
     fields.mkString("AppOptions[", ", ", "]")
   }
 }
