@@ -2,6 +2,7 @@ package cz.cvut.fit.bioop.hackernewsclient.api.apiClients
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import cz.cvut.fit.bioop.hackernewsclient.api.apiRequests.HackerNewsApiRequest
+import cz.cvut.fit.bioop.hackernewsclient.cache.InMemoryCache
 
 trait ApiClient {
   def getItem(id: Long): Option[Item]
@@ -14,7 +15,7 @@ trait ApiClient {
 }
 
 object ApiClient extends ApiClient {
-  val apiClient: ApiClient = new V0ApiClient(new HackerNewsApiRequest)
+  val apiClient: ApiClient = new V0ApiClient(new HackerNewsApiRequest, new InMemoryCache)
 
   def getItem(id: Long): Option[Item] = {
     apiClient.getItem(id)

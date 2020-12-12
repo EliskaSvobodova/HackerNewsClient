@@ -6,12 +6,12 @@ import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
-class V0ApiClient(apiRequest: ApiRequest) extends ApiClient {
+class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
   private val logger = Logger(getClass.getSimpleName)
 
   override def getItem(id: Long): Option[Item] = {
     logger.info("Getting item from api client")
-    val itemOpt = Cache.getItem(id)
+    val itemOpt = cache.getItem(id)
     if(itemOpt.isDefined) {
       logger.info("Item was in cache")
       return itemOpt
@@ -20,20 +20,20 @@ class V0ApiClient(apiRequest: ApiRequest) extends ApiClient {
     val response = apiRequest.getItem(id)
     val itemFromApiOpt = ResponseReader.toItem(response)
     if(itemFromApiOpt.isDefined)
-      Cache.cacheItem(itemFromApiOpt.get)
+      cache.cacheItem(itemFromApiOpt.get)
     itemFromApiOpt
   }
 
   override def getItems(ids: Array[Long]): Array[Item] = {
     logger.info("Getting items from api client")
-    val items = Cache.getItems(ids)
+    val items = cache.getItems(ids)
     for((id, item) <- ids zip items)
       yield
         if(item.isEmpty) {
           logger.info("Item wasn't found in cache, getting it from web api")
           val itemOpt = ResponseReader.toItem(apiRequest.getItem(id))
           if(itemOpt.isDefined)
-            Cache.cacheItem(itemOpt.get)
+            cache.cacheItem(itemOpt.get)
           itemOpt.get
         } else {
           logger.info("Item was in cache")
@@ -42,13 +42,13 @@ class V0ApiClient(apiRequest: ApiRequest) extends ApiClient {
   }
 
   override def getUser(id: String): Option[User] = {
-    val userOpt = Cache.getUser(id)
+    val userOpt = cache.getUser(id)
     if(userOpt.isDefined)
       return userOpt
     val response = apiRequest.getUser(id)
     val userFromApiOpt = ResponseReader.toUser(response)
     if(userFromApiOpt.isDefined)
-      Cache.cacheUser(userFromApiOpt.get)
+      cache.cacheUser(userFromApiOpt.get)
     userFromApiOpt
   }
 
