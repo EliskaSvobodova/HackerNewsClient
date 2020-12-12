@@ -1,15 +1,13 @@
 package cz.cvut.fit.bioop.hackernewsclient.api.apiClients
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
-import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.{ResponseReader, UPickleResponseReader}
+import cz.cvut.fit.bioop.hackernewsclient.api.apiRequests.ApiRequest
+import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
-import scala.io.Source
-
-class V0ApiClient extends ApiClient {
+class V0ApiClient(apiRequest: ApiRequest) extends ApiClient {
   private val logger = Logger(getClass.getSimpleName)
-  private val baseUrl: String = "https://hacker-news.firebaseio.com/v0/"
 
   override def getItem(id: Long): Option[Item] = {
     logger.info("Getting item from api client")
@@ -19,7 +17,7 @@ class V0ApiClient extends ApiClient {
       return itemOpt
     }
     logger.info("Item wasn't found in cache, getting it from web api")
-    val response = get(baseUrl + "item/" + id + ".json")
+    val response = apiRequest.getItem(id)
     val itemFromApiOpt = ResponseReader.toItem(response)
     if(itemFromApiOpt.isDefined)
       Cache.cacheItem(itemFromApiOpt.get)
@@ -33,7 +31,7 @@ class V0ApiClient extends ApiClient {
       yield
         if(item.isEmpty) {
           logger.info("Item wasn't found in cache, getting it from web api")
-          val itemOpt = ResponseReader.toItem(get(baseUrl + "item/" + id + ".json"))
+          val itemOpt = ResponseReader.toItem(apiRequest.getItem(id))
           if(itemOpt.isDefined)
             Cache.cacheItem(itemOpt.get)
           itemOpt.get
@@ -47,7 +45,7 @@ class V0ApiClient extends ApiClient {
     val userOpt = Cache.getUser(id)
     if(userOpt.isDefined)
       return userOpt
-    val response = get(baseUrl + "user/" + id + ".json")
+    val response = apiRequest.getUser(id)
     val userFromApiOpt = ResponseReader.toUser(response)
     if(userFromApiOpt.isDefined)
       Cache.cacheUser(userFromApiOpt.get)
@@ -55,28 +53,18 @@ class V0ApiClient extends ApiClient {
   }
 
   override def getTopStories: Array[Long] = {
-    val topStoriesIds = get(baseUrl + "topstories.json")
-    ResponseReader.toArrayOfItemIds(topStoriesIds)
+    ResponseReader.toArrayOfItemIds(apiRequest.getTopStories)
   }
 
   override def getNewStories: Array[Long] = {
-    val newStoriesIds = get(baseUrl + "newstories.json")
-    ResponseReader.toArrayOfItemIds(newStoriesIds)
+    ResponseReader.toArrayOfItemIds(apiRequest.getNewStories)
   }
 
   override def getBestStories: Array[Long] = {
-    val bestStoriesIds = get(baseUrl + "beststories.json")
-    ResponseReader.toArrayOfItemIds(bestStoriesIds)
+    ResponseReader.toArrayOfItemIds(apiRequest.getBestStories)
   }
 
   override def getUpdates: Updates = {
-    ResponseReader.toUpdates(get(baseUrl + "updates.json"))
-  }
-
-  private def get(url: String) = {
-    val source = Source.fromURL(url)
-    val content = source.mkString
-    source.close()
-    content
+    ResponseReader.toUpdates(apiRequest.getUpdates)
   }
 }

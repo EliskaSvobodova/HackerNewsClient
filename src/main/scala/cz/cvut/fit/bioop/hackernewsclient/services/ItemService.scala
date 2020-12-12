@@ -25,7 +25,7 @@ object ItemService {
         val item = displayItem(id)
         displayedItems += item
       } catch {
-        case e: NoSuchElementException => // skip
+        case _: NoSuchElementException => // skip
       }
     }
     displayedItems.toArray
