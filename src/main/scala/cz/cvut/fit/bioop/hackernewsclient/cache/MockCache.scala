@@ -11,16 +11,10 @@ class MockCache extends Cache {
     itemsCache.find(item => item.id == id)
   }
 
-  override def getItems(ids: Array[Long]): Array[Option[Item]] = Array()
-
   override def getUser(id: String): Option[User] = None
 
   override def cacheItem(item: Item): Unit = {
     itemsCache += item
-  }
-
-  override def cacheItems(items: Array[Item]): Unit = {
-    itemsCache ++= items
   }
 
   override def cacheUser(user: User): Unit = {

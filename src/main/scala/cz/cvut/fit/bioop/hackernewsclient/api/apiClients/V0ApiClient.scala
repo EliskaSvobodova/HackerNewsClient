@@ -10,7 +10,6 @@ class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
   private val logger = Logger(getClass.getSimpleName)
 
   override def getItem(id: Long): Option[Item] = {
-    logger.info("Getting item from api client")
     val itemOpt = cache.getItem(id)
     if(itemOpt.isDefined) {
       logger.info("Item was in cache")
@@ -26,19 +25,20 @@ class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
 
   override def getItems(ids: Array[Long]): Array[Item] = {
     logger.info("Getting items from api client")
-    val items = cache.getItems(ids)
-    for((id, item) <- ids zip items)
-      yield
-        if(item.isEmpty) {
-          logger.info("Item wasn't found in cache, getting it from web api")
-          val itemOpt = ResponseReader.toItem(apiRequest.getItem(id))
-          if(itemOpt.isDefined)
-            cache.cacheItem(itemOpt.get)
-          itemOpt.get
-        } else {
+    for(id <- ids)
+      yield {
+        val itemCacheOpt = cache.getItem(id)
+        if(itemCacheOpt.isDefined) {
           logger.info("Item was in cache")
-          item.get
+          itemCacheOpt.get
+        } else {
+          logger.info("Item wasn't found in cache, getting it from web api")
+          val itemApiOpt = ResponseReader.toItem(apiRequest.getItem(id))
+          if(itemApiOpt.isDefined)
+            cache.cacheItem(itemApiOpt.get)
+          itemApiOpt.get
         }
+      }
   }
 
   override def getUser(id: String): Option[User] = {
