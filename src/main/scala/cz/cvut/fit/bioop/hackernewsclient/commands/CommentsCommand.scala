@@ -23,14 +23,15 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
   private val pageRe: Regex = "--page=([0-9]+)".r
   private val pageSizeRe: Regex = "--page-size=([0-9]+)".r
 
-  case class Options(id: Long, page: Int, pageSize: Int)
+  case class Options(id: String, page: Int, pageSize: Int)
 
   override def execute(): Unit = {
     logger.info("Executing CommentsCommand")
     try{
       val options = getOptions
-      val mainItem: Item = ItemService.displayItem(options.id)
-      ItemService.displayPageOfItems(options.page, options.pageSize, mainItem.kids)
+      val itemService = new ItemService()
+      val mainItem: Item = itemService.display(options.id)
+      itemService.displayPage(options.page, options.pageSize, mainItem.kids)
     } catch {
       case _: HelpException => Renderer.renderHelp(CommentsCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
@@ -39,13 +40,13 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
   }
 
   def getOptions: Options = {
-    var id: Long = -1
+    var id: String = ""
     var page = 1
     var pageSize = 10
 
     for(option <- commandOptions) {
       option match {
-        case idRe(itemId) => id = itemId.toLong
+        case idRe(itemId) => id = itemId
         case pageRe(pageNum) => page = pageNum.toInt
         case pageSizeRe(pageSizeNum) => pageSize = pageSizeNum.toInt
         case "--help" =>
@@ -58,7 +59,7 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
       }
     }
 
-    if(id == -1){
+    if(id == ""){
       logger.error("Missing compulsory option --id=[value]")
       throw new IllegalArgumentException("Missing compulsory option --id=[value], " +
         "fill a user name instead of [value]")

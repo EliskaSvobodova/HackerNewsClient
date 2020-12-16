@@ -21,10 +21,7 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
   private val divider = "~"
   private val storePattern = ("([^" + divider + "]+)" + divider + "([0-9]+)" + divider + "(.+)").r
 
-  override def getItem(itemId: Long): Option[Item] = {
-    if(ApiClient.getUpdates.items.contains(itemId)) {
-      return None
-    }
+  override def getItem(itemId: String): Option[Item] = {
     val recordOpt = getRecord(itemId.toString, itemsFile)
     if(recordOpt.isDefined)
       ResponseReader.toItem(recordOpt.get)
@@ -33,8 +30,6 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
   }
 
   override def getUser(userId: String): Option[User] = {
-    if(ApiClient.getUpdates.profiles.contains(userId))
-      return None
     val recordOpt = getRecord(userId, usersFile)
     if(recordOpt.isDefined)
       ResponseReader.toUser(recordOpt.get)
@@ -46,7 +41,7 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
     val source = getSource(fileName)
     val lines = source.getLines()
     for(line <- lines){
-      val storePattern(cachedId, from, rest) = line
+      val storePattern(cachedId, _, rest) = line
       if(cachedId == id) {
         source.close()
         return Option(rest)
@@ -57,7 +52,7 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
   }
 
   override def cacheItem(item: Item): Unit = {
-    cacheElement(item, item.id.toString, itemsFile)
+    cacheElement(item, item.id, itemsFile)
   }
 
   override def cacheUser(user: User): Unit = {

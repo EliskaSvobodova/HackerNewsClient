@@ -9,7 +9,7 @@ trait ResponseReader {
 
   def toUpdates(response: String): Updates
 
-  def toArrayOfItemIds(response: String): Array[Long]
+  def toArrayOfItemIds(response: String): Array[String]
 }
 
 object ResponseReader extends ResponseReader {
@@ -24,6 +24,6 @@ object ResponseReader extends ResponseReader {
   def toUpdates(response: String): Updates =
     responseReader.toUpdates(response)
 
-  def toArrayOfItemIds(response: String): Array[Long] =
+  def toArrayOfItemIds(response: String): Array[String] =
     responseReader.toArrayOfItemIds(response)
 }

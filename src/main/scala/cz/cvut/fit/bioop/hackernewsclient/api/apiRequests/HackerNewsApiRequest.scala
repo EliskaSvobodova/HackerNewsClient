@@ -12,7 +12,7 @@ class HackerNewsApiRequest extends ApiRequest {
     content
   }
 
-  override def getItem(id: Long): String = get(baseUrl + "item/" + id + ".json")
+  override def getItem(id: String): String = get(baseUrl + "item/" + id + ".json")
 
   override def getUser(id: String): String = get(baseUrl + "user/" + id + ".json")
 

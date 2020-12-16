@@ -2,7 +2,7 @@ package cz.cvut.fit.bioop.hackernewsclient.commands
 
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
-import cz.cvut.fit.bioop.hackernewsclient.services.UserService
+import cz.cvut.fit.bioop.hackernewsclient.services.{ItemService, UserService}
 import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException}
 
 import scala.collection.immutable.ListMap
@@ -31,8 +31,10 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
     logger.info("Executing UserCommand")
     try{
       val options = getOptions
-      val user = UserService.displayUser(options.id)
-      UserService.displayUserContribs(user, options.display)
+      val userService = new UserService()
+      val user = userService.display(options.id)
+      val itemService = new ItemService()
+      itemService.displayIf(user.submitted, item => !item.deleted && options.display.contains(item.itemType))
     } catch {
       case _: HelpException => Renderer.renderHelp(UserCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)

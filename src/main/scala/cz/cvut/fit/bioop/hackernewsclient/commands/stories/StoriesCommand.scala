@@ -1,10 +1,10 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
+import cz.cvut.fit.bioop.hackernewsclient.HelpException
 import cz.cvut.fit.bioop.hackernewsclient.commands.Command
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 import cz.cvut.fit.bioop.hackernewsclient.services.ItemService
-import cz.cvut.fit.bioop.hackernewsclient.HelpException
-import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 import scala.util.matching.Regex
 
@@ -16,10 +16,11 @@ trait StoriesCommand extends Command {
 
   case class StoriesOptions(page: Int, pageSize: Int)
 
-  protected def execute(storiesObj: StoriesCommandObject): Unit = {
+  protected def execute(storiesObj: StoriesCommandObject, storiesIds: Array[String] = Array()): Unit = {
     try{
       val options = getOptions
-      ItemService.displayPageOfItems(options.page, options.pageSize, storiesObj.data)
+      val itemService = new ItemService()
+      itemService.displayPage(options.page, options.pageSize, storiesIds)
     } catch {
       case _: HelpException => Renderer.renderHelp(storiesObj.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)

@@ -7,7 +7,7 @@ trait ResponseWriter {
 
   def fromUser(user: User): String
 
-  def fromArrayOfItemIds(stories: Array[Long]): String
+  def fromArrayOfItemIds(stories: Array[String]): String
 }
 
 object ResponseWriter extends ResponseWriter {
@@ -19,6 +19,6 @@ object ResponseWriter extends ResponseWriter {
   def fromUser(user: User): String =
     responseWriter.fromUser(user)
 
-  def fromArrayOfItemIds(stories: Array[Long]): String =
+  def fromArrayOfItemIds(stories: Array[String]): String =
     responseWriter.fromArrayOfItemIds(stories)
 }

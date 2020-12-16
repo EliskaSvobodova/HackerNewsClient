@@ -7,7 +7,7 @@ import scala.util.matching.Regex
 trait Cache {
   def timeToLive: Long
 
-  def getItem(id: Long): Option[Item]
+  def getItem(id: String): Option[Item]
 
   def getUser(id: String): Option[User]
 

@@ -10,6 +10,6 @@ class UPickleResponseWriter extends ResponseWriter {
   def fromUser(user: User): String =
     write[User](user)
 
-  def fromArrayOfItemIds(stories: Array[Long]): String =
+  def fromArrayOfItemIds(stories: Array[String]): String =
     write(stories)
 }

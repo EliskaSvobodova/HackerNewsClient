@@ -13,10 +13,9 @@ class UPickleResponseReader extends ResponseReader {
   def toUpdates(response: String): Updates =
     read[Updates](response)
 
-  def toArrayOfItemIds(response: String): Array[Long] = {
+  def toArrayOfItemIds(response: String): Array[String] = {
     if (response == "[]")
       throw new IllegalArgumentException("Empty response")
-    val storyIds = response.substring(1, response.length - 1).split(",")
-    storyIds.map(id => id.toLong)
+    response.substring(1, response.length - 1).split(",")
   }
 }

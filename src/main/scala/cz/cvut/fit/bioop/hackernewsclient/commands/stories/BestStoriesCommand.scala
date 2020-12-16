@@ -1,13 +1,12 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 
-import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.AppOptions
+import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClientFactory
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 object BestStoriesCommand extends StoriesCommandObject {
   override def help(): String = buildHelp(name, "Shows best stories from HackerNews", helpOptions)
   override val name: String = "best-stories"
-  override lazy val data: Array[Long] = ApiClient.getBestStories
 }
 
 class BestStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends StoriesCommand {
@@ -15,6 +14,7 @@ class BestStoriesCommand(val appOptions: AppOptions, val commandOptions: Array[S
 
   override def execute(): Unit = {
     logger.info("Executing BestStoriesCommand")
-    execute(BestStoriesCommand)
+    val apiClient = ApiClientFactory()
+    super.execute(BestStoriesCommand, apiClient.getBestStories)
   }
 }

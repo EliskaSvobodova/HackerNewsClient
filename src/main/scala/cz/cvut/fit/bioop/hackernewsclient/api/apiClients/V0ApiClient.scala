@@ -9,7 +9,7 @@ import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
   private val logger = Logger(getClass.getSimpleName)
 
-  override def getItem(id: Long): Option[Item] = {
+  override def getItem(id: String): Option[Item] = {
     val itemOpt = cache.getItem(id)
     if(itemOpt.isDefined) {
       logger.info("Item was in cache")
@@ -23,7 +23,7 @@ class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
     itemFromApiOpt
   }
 
-  override def getItems(ids: Array[Long]): Array[Item] = {
+  override def getItems(ids: Array[String]): Array[Item] = {
     logger.info("Getting items from api client")
     for(id <- ids)
       yield {
@@ -52,15 +52,15 @@ class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
     userFromApiOpt
   }
 
-  override def getTopStories: Array[Long] = {
+  override def getTopStories: Array[String] = {
     ResponseReader.toArrayOfItemIds(apiRequest.getTopStories)
   }
 
-  override def getNewStories: Array[Long] = {
+  override def getNewStories: Array[String] = {
     ResponseReader.toArrayOfItemIds(apiRequest.getNewStories)
   }
 
-  override def getBestStories: Array[Long] = {
+  override def getBestStories: Array[String] = {
     ResponseReader.toArrayOfItemIds(apiRequest.getBestStories)
   }
 

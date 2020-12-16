@@ -7,7 +7,7 @@ class MockCache extends Cache {
   private val itemsCache = ArrayBuffer[Item]()
   private val usersCache = ArrayBuffer[User]()
 
-  override def getItem(id: Long): Option[Item] = {
+  override def getItem(id: String): Option[Item] = {
     itemsCache.find(item => item.id == id)
   }
 
