@@ -6,7 +6,8 @@ import scala.util.matching.Regex
 
 object Logger {
   val severityRe: Regex = "--log=(error|warning|info)$".r
-  var minSeverity: LoggerSeverity.Value = LoggerSeverity.info
+  val defaultMinSeverity: LoggerSeverity.Value = LoggerSeverity.info
+  var minSeverity: LoggerSeverity.Value = defaultMinSeverity
 }
 
 case class Logger(className: String) {

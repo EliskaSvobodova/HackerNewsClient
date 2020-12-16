@@ -4,17 +4,25 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.api.responseWriters.ResponseWriter
+import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 import java.io.{File, FileWriter}
+import java.util.Calendar
+import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
 class InMemoryCache extends Cache {
+  private val logger = Logger(getClass.getSimpleName)
+
   private val cachePath = "cache/"
   private val itemsFile = "items"
+  private var currentItemsFile = 0
   private val usersFile = "users"
+  private var currentUsersFile = 0
+  private val tmpFile = "tmpCache"
 
   private val divider = "~"
-  private val storePattern = ("([^" + divider + "]+)" + divider + "(.+)").r
+  private val storePattern = ("([^" + divider + "]+)" + divider + "([0-9]+)" + divider + "(.+)").r
 
   override def getItem(itemId: Long): Option[Item] = {
     if(ApiClient.getUpdates.items.contains(itemId)) {
@@ -41,7 +49,7 @@ class InMemoryCache extends Cache {
     val source = getSource(fileName)
     val lines = source.getLines()
     for(line <- lines){
-      val storePattern(cachedId, rest) = line
+      val storePattern(cachedId, from, rest) = line
       if(cachedId == id) {
         source.close()
         return Option(rest)
@@ -59,12 +67,14 @@ class InMemoryCache extends Cache {
     cacheElement(user, user.id, usersFile)
   }
 
-  implicit val itemToCacheable: Cacheable[Item] = (item: Item) => item.id + divider + ResponseWriter.fromItem(item)
+  implicit val itemToCacheable: Cacheable[Item] =
+    (item: Item) => item.id + divider + Calendar.getInstance().getTime.getTime + divider + ResponseWriter.fromItem(item)
 
-  implicit val userToCacheable: Cacheable[User] = (user: User) => user.id + divider + ResponseWriter.fromUser(user)
+  implicit val userToCacheable: Cacheable[User] =
+    (user: User) => user.id + divider + Calendar.getInstance().getTime.getTime + divider + ResponseWriter.fromUser(user)
 
   private def cacheElement[T](x: T, id: String, fileName: String)(implicit elem: Cacheable[T]): Unit = {
-    if(isElementCached(id, fileName)) {
+    if(isElemCachedAndUpdate(id, fileName)) {
       return
     }
     val writer = new FileWriter(getFile(fileName), true)
@@ -72,18 +82,35 @@ class InMemoryCache extends Cache {
     writer.close()
   }
 
-  private def isElementCached(id: String, fileName: String): Boolean = {
-    val source = getSource(fileName)
+  private def isElemCachedAndUpdate(id: String, fileName: String): Boolean = {
+    val source = Source.fromFile(getFile(fileName))
+    val updated = ArrayBuffer[String]()
+
     val lines = source.getLines()
+    var isElemCached = false
+
+    val minAge = Calendar.getInstance().getTime.getTime - Cache.timeToLive * 1000
+    logger.info("now = " + Calendar.getInstance().getTime.getTime)
+    logger.info("min age for cached elems = " + minAge)
     for(line <- lines){
-      val storePattern(cachedId, _) = line
+      val storePattern(cachedId, age, _) = line
       if(cachedId == id) {  // element is already cached
-        source.close()
-        return true
+        isElemCached = true
       }
+      if(age.toLong > minAge) {
+        updated.append(line + "\n")
+        logger.info("Line is fresh enough: " + line)
+      } else
+        logger.info("Line in cache too old: " + line)
     }
     source.close()
-    false
+
+    val rewriter = new FileWriter(getFile(fileName))
+    for(line <- updated)
+      rewriter.append(line)
+    rewriter.close()
+
+    isElemCached
   }
 
   private def getSource(filename: String): Source = {

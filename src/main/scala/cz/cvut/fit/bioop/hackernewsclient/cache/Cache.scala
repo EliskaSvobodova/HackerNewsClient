@@ -2,6 +2,8 @@ package cz.cvut.fit.bioop.hackernewsclient.cache
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 
+import scala.util.matching.Regex
+
 trait Cache {
   def getItem(id: Long): Option[Item]
 
@@ -14,6 +16,11 @@ trait Cache {
 
 object Cache extends Cache {
   val cache: Cache = new InMemoryCache()
+
+  val defaultTimeToLive: Long = 60
+  var timeToLive: Long = defaultTimeToLive
+
+  val cacheTtlRe: Regex = "--ttl=([0-9]+)".r
 
   override def getItem(id: Long): Option[Item] =
     cache.getItem(id)
