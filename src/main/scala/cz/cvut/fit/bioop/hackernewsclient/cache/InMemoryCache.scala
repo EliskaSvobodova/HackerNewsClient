@@ -11,15 +11,12 @@ import java.util.Calendar
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 
-class InMemoryCache extends Cache {
+class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) extends Cache {
   private val logger = Logger(getClass.getSimpleName)
 
   private val cachePath = "cache/"
   private val itemsFile = "items"
-  private var currentItemsFile = 0
   private val usersFile = "users"
-  private var currentUsersFile = 0
-  private val tmpFile = "tmpCache"
 
   private val divider = "~"
   private val storePattern = ("([^" + divider + "]+)" + divider + "([0-9]+)" + divider + "(.+)").r
@@ -89,7 +86,7 @@ class InMemoryCache extends Cache {
     val lines = source.getLines()
     var isElemCached = false
 
-    val minAge = Calendar.getInstance().getTime.getTime - Cache.timeToLive * 1000
+    val minAge = Calendar.getInstance().getTime.getTime - timeToLive * 1000
     logger.info("now = " + Calendar.getInstance().getTime.getTime)
     logger.info("min age for cached elems = " + minAge)
     for(line <- lines){

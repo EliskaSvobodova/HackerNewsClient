@@ -20,4 +20,6 @@ class MockCache extends Cache {
   override def cacheUser(user: User): Unit = {
     usersCache += user
   }
+
+  override def timeToLive: Long = 10
 }

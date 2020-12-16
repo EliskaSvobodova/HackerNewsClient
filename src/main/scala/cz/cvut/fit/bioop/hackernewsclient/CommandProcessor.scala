@@ -1,12 +1,10 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
-import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 object CommandProcessor {
   def process(appOptions: AppOptions, args: Array[String]): Unit = {
     Logger.minSeverity = appOptions.log
-    Cache.timeToLive = appOptions.ttl
     if(appOptions.help)
       println(getHelp)
     else if(args.length != 0) {
