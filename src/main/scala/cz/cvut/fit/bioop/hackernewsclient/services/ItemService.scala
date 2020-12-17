@@ -2,7 +2,7 @@ package cz.cvut.fit.bioop.hackernewsclient.services
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.{ApiClient, ApiClientFactory}
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.Item
-import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
+import cz.cvut.fit.bioop.hackernewsclient.ui.builders.UiBuilder
 
 import java.util.NoSuchElementException
 import scala.collection.mutable.ArrayBuffer
@@ -12,7 +12,7 @@ class ItemService(val apiClient: ApiClient = ApiClientFactory()) {
     val itemOpt = apiClient.getItem(id)
     if(itemOpt.isEmpty)
       throw new NoSuchElementException("Item with id " + id + " doesn't exist!")
-    Renderer.renderItem(itemOpt.get)
+    UiBuilder.buildItemUi(itemOpt.get)
     itemOpt.get
   }
 
@@ -41,7 +41,7 @@ class ItemService(val apiClient: ApiClient = ApiClientFactory()) {
         val item = itemOpt.get
         if (cond(item)) {
           displayedItems += item
-          Renderer.renderItem(item)
+          UiBuilder.buildItemUi(item)
         }
       }
     }

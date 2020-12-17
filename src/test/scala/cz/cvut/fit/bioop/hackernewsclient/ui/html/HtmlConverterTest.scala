@@ -1,4 +1,4 @@
-package cz.cvut.fit.bioop.hackernewsclient.renderers.html
+package cz.cvut.fit.bioop.hackernewsclient.ui.html
 
 import org.scalatest.funsuite.AnyFunSuite
 

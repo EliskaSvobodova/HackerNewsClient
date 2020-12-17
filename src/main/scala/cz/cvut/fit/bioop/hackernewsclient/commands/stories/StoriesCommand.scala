@@ -3,8 +3,8 @@ package cz.cvut.fit.bioop.hackernewsclient.commands.stories
 import cz.cvut.fit.bioop.hackernewsclient.HelpException
 import cz.cvut.fit.bioop.hackernewsclient.commands.Command
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
-import cz.cvut.fit.bioop.hackernewsclient.renderers.Renderer
 import cz.cvut.fit.bioop.hackernewsclient.services.ItemService
+import cz.cvut.fit.bioop.hackernewsclient.ui.builders.UiBuilder
 
 import scala.util.matching.Regex
 
@@ -22,8 +22,8 @@ trait StoriesCommand extends Command {
       val itemService = new ItemService()
       itemService.displayPage(options.page, options.pageSize, storiesIds)
     } catch {
-      case _: HelpException => Renderer.renderHelp(storiesObj.help())
-      case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
+      case _: HelpException => UiBuilder.BuildHelpUi(storiesObj.help())
+      case e: IllegalArgumentException => UiBuilder.BuildErrorUi(e.getMessage)
     }
   }
 

@@ -6,14 +6,14 @@ class UPickleResponseReaderTest extends AnyFunSuite {
   test("testToItem") {
     val testResponse = "{\"by\":\"dhouston\",\"descendants\":71,\"id\":8863,\"kids\":[9224,8917],\"score\":104,\"time\":1175714200,\"title\":\"My YC app: Dropbox - Throw away your USB drive\",\"type\":\"story\",\"url\":\"http://www.getdropbox.com/u/2/screencast.html\"}"
     val item = ResponseReader.toItem(testResponse).get
-    assert(item.id == "8863")
+    assert(item.id == 8863)
     assert(!item.deleted)
     assert(item.itemType == "story")
     assert(item.by == "dhouston")
     assert(item.time == 1175714200)
     assert(item.text == "no text")
     assert(!item.dead)
-    assert(item.parent == "")
+    assert(item.parent == -1)
     assert(item.poll == -1)
     assert(item.kids sameElements Array(9224,8917))
     assert(item.url == "http://www.getdropbox.com/u/2/screencast.html")

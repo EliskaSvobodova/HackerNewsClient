@@ -14,7 +14,7 @@ class MockApiRequest(val items: ArrayBuffer[Item] = ArrayBuffer[Item](),
   extends ApiRequest {
 
   override def getItem(id: String): String = {
-    val itemOpt = items.find(item => item.id == id)
+    val itemOpt = items.find(item => item.id.toString == id)
     if(itemOpt.isDefined)
       ResponseWriter.fromItem(itemOpt.get)
     else
