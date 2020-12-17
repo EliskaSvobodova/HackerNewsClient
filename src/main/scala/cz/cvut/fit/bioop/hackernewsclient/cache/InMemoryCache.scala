@@ -1,28 +1,25 @@
 package cz.cvut.fit.bioop.hackernewsclient.cache
 
-import cz.cvut.fit.bioop.hackernewsclient.api.apiClients.ApiClient
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.api.responseWriters.ResponseWriter
+import cz.cvut.fit.bioop.hackernewsclient.cache.locations.{CacheLocation, FileLocation}
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
-import java.io.{File, FileWriter}
 import java.util.Calendar
 import scala.collection.mutable.ArrayBuffer
-import scala.io.Source
 
-class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) extends Cache {
+class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive,
+                    private val itemsCache: CacheLocation = new FileLocation("items"),
+                    private val usersCache: CacheLocation = new FileLocation("users"))
+  extends Cache {
   private val logger = Logger(getClass.getSimpleName)
-
-  private val cachePath = "cache/"
-  private val itemsFile = "items"
-  private val usersFile = "users"
 
   private val divider = "~"
   private val storePattern = ("([^" + divider + "]+)" + divider + "([0-9]+)" + divider + "(.+)").r
 
   override def getItem(itemId: String): Option[Item] = {
-    val recordOpt = getRecord(itemId.toString, itemsFile)
+    val recordOpt = getRecord(itemId, itemsCache)
     if(recordOpt.isDefined)
       ResponseReader.toItem(recordOpt.get)
     else
@@ -30,33 +27,30 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
   }
 
   override def getUser(userId: String): Option[User] = {
-    val recordOpt = getRecord(userId, usersFile)
+    val recordOpt = getRecord(userId, usersCache)
     if(recordOpt.isDefined)
       ResponseReader.toUser(recordOpt.get)
     else
       None
   }
 
-  private def getRecord(id: String, fileName: String): Option[String] ={
-    val source = getSource(fileName)
-    val lines = source.getLines()
+  private def getRecord(id: String, location: CacheLocation): Option[String] ={
+    val lines = location.getLines
     for(line <- lines){
       val storePattern(cachedId, _, rest) = line
       if(cachedId == id) {
-        source.close()
         return Option(rest)
       }
     }
-    source.close()
     None
   }
 
   override def cacheItem(item: Item): Unit = {
-    cacheElement(item, item.id, itemsFile)
+    cacheElement(item, item.id, itemsCache)
   }
 
   override def cacheUser(user: User): Unit = {
-    cacheElement(user, user.id, usersFile)
+    cacheElement(user, user.id, usersCache)
   }
 
   implicit val itemToCacheable: Cacheable[Item] =
@@ -65,25 +59,19 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
   implicit val userToCacheable: Cacheable[User] =
     (user: User) => user.id + divider + Calendar.getInstance().getTime.getTime + divider + ResponseWriter.fromUser(user)
 
-  private def cacheElement[T](x: T, id: String, fileName: String)(implicit elem: Cacheable[T]): Unit = {
-    if(isElemCachedAndUpdate(id, fileName)) {
+  private def cacheElement[T](x: T, id: String, location: CacheLocation)(implicit elem: Cacheable[T]): Unit = {
+    if(isElemCachedAndUpdate(id, location)) {
       return
     }
-    val writer = new FileWriter(getFile(fileName), true)
-    writer.write(elem.toCacheable(x) + "\n")
-    writer.close()
+    location.append(elem.toCacheable(x) + "\n")
   }
 
-  private def isElemCachedAndUpdate(id: String, fileName: String): Boolean = {
-    val source = Source.fromFile(getFile(fileName))
+  private def isElemCachedAndUpdate(id: String, location: CacheLocation): Boolean = {
     val updated = ArrayBuffer[String]()
-
-    val lines = source.getLines()
+    val lines = location.getLines
     var isElemCached = false
 
     val minAge = Calendar.getInstance().getTime.getTime - timeToLive * 1000
-    logger.info("now = " + Calendar.getInstance().getTime.getTime)
-    logger.info("min age for cached elems = " + minAge)
     for(line <- lines){
       val storePattern(cachedId, age, _) = line
       if(cachedId == id) {  // element is already cached
@@ -95,26 +83,8 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive) ext
       } else
         logger.info("Line in cache too old: " + line)
     }
-    source.close()
 
-    val rewriter = new FileWriter(getFile(fileName))
-    for(line <- updated)
-      rewriter.append(line)
-    rewriter.close()
-
+    location.write(updated)
     isElemCached
-  }
-
-  private def getSource(filename: String): Source = {
-    Source.fromFile(getFile(filename))
-  }
-
-  private def getFile(filename: String): File = {
-    val directory = new File(cachePath)
-    directory.mkdir()  // create cache directory if it doesn't exist
-    val cacheFile = new File(cachePath + filename)
-    if(!cacheFile.exists())
-      cacheFile.createNewFile()
-    cacheFile
   }
 }
