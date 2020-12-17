@@ -6,7 +6,7 @@ import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.cache.Cache
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
-class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
+class V0ApiClient(val apiRequest: ApiRequest, val cache: Cache) extends ApiClient {
   private val logger = Logger(getClass.getSimpleName)
 
   override def getItem(id: String): Option[Item] = {
@@ -16,29 +16,19 @@ class V0ApiClient(apiRequest: ApiRequest, cache: Cache) extends ApiClient {
       return itemOpt
     }
     logger.info("Item wasn't found in cache, getting it from web api")
-    val response = apiRequest.getItem(id)
-    val itemFromApiOpt = ResponseReader.toItem(response)
+    val itemFromApiOpt = ResponseReader.toItem(apiRequest.getItem(id))
     if(itemFromApiOpt.isDefined)
       cache.cacheItem(itemFromApiOpt.get)
     itemFromApiOpt
   }
 
   override def getItems(ids: Array[String]): Array[Item] = {
-    logger.info("Getting items from api client")
-    for(id <- ids)
-      yield {
-        val itemCacheOpt = cache.getItem(id)
-        if(itemCacheOpt.isDefined) {
-          logger.info("Item was in cache")
-          itemCacheOpt.get
-        } else {
-          logger.info("Item wasn't found in cache, getting it from web api")
-          val itemApiOpt = ResponseReader.toItem(apiRequest.getItem(id))
-          if(itemApiOpt.isDefined)
-            cache.cacheItem(itemApiOpt.get)
-          itemApiOpt.get
-        }
-      }
+    for{
+      id <- ids
+      itemOpt = getItem(id)
+      if itemOpt.isDefined
+    } yield
+        itemOpt.get
   }
 
   override def getUser(id: String): Option[User] = {

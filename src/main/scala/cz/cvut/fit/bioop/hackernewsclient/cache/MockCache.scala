@@ -3,15 +3,17 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 
 import scala.collection.mutable.ArrayBuffer
 
-class MockCache extends Cache {
-  private val itemsCache = ArrayBuffer[Item]()
-  private val usersCache = ArrayBuffer[User]()
+class MockCache(val itemsCache: ArrayBuffer[Item] = ArrayBuffer[Item](),
+                val usersCache: ArrayBuffer[User] = ArrayBuffer[User]())
+  extends Cache {
 
   override def getItem(id: String): Option[Item] = {
     itemsCache.find(item => item.id == id)
   }
 
-  override def getUser(id: String): Option[User] = None
+  override def getUser(id: String): Option[User] = {
+    usersCache.find(user => user.id == id)
+  }
 
   override def cacheItem(item: Item): Unit = {
     itemsCache += item

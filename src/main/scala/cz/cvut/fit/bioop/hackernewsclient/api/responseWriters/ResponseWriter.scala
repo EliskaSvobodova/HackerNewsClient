@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.api.responseWriters
 
-import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
+import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 
 trait ResponseWriter {
   def fromItem(item: Item): String
@@ -8,17 +8,22 @@ trait ResponseWriter {
   def fromUser(user: User): String
 
   def fromArrayOfItemIds(stories: Array[String]): String
+
+  def fromUpdates(updates: Updates): String
 }
 
 object ResponseWriter extends ResponseWriter {
   val responseWriter: ResponseWriter = new UPickleResponseWriter()
 
-  def fromItem(item: Item): String =
+  override def fromItem(item: Item): String =
     responseWriter.fromItem(item)
 
-  def fromUser(user: User): String =
+  override def fromUser(user: User): String =
     responseWriter.fromUser(user)
 
-  def fromArrayOfItemIds(stories: Array[String]): String =
+  override def fromArrayOfItemIds(stories: Array[String]): String =
     responseWriter.fromArrayOfItemIds(stories)
+
+  override def fromUpdates(updates: Updates): String =
+    responseWriter.fromUpdates(updates)
 }

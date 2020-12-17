@@ -1,15 +1,18 @@
 package cz.cvut.fit.bioop.hackernewsclient.api.responseWriters
 
-import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
+import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import upickle.default.write
 
 class UPickleResponseWriter extends ResponseWriter {
-  def fromItem(item: Item): String =
+  override def fromItem(item: Item): String =
     write[Item](item)
 
-  def fromUser(user: User): String =
+  override def fromUser(user: User): String =
     write[User](user)
 
-  def fromArrayOfItemIds(stories: Array[String]): String =
+  override def fromArrayOfItemIds(stories: Array[String]): String =
     write(stories)
+
+  override def fromUpdates(updates: Updates): String =
+    write[Updates](updates)
 }
