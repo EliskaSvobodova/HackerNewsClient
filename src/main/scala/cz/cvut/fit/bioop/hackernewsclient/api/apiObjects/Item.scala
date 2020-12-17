@@ -3,20 +3,20 @@ package cz.cvut.fit.bioop.hackernewsclient.api.apiObjects
 import upickle.default.{macroRW, ReadWriter => RW}
 import upickle.implicits.key
 
-case class Item (id: String = "",
+case class Item (id: Long = -1,
                  deleted: Boolean = false,
                  @key("type") itemType: String = "unknown item type",
                  by: String = "unknown author",
                  time: Long = -1,
                  text: String = "no text",
                  dead: Boolean = false,
-                 parent: String = "",
+                 parent: Long = -1,
                  poll: Long = -1,
-                 kids: Array[String] = Array(),
+                 kids: Array[Long] = Array(),
                  url: String = "unknown url",
                  score: Long = 0,
                  title: String = "no title",
-                 parts: Array[String] = Array(),
+                 parts: Array[Long] = Array(),
                  descendants: Long = 0) {
 
   override def toString: String = {

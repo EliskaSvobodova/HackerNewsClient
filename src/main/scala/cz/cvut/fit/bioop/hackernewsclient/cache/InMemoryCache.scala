@@ -4,7 +4,6 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 import cz.cvut.fit.bioop.hackernewsclient.api.responseReaders.ResponseReader
 import cz.cvut.fit.bioop.hackernewsclient.api.responseWriters.ResponseWriter
 import cz.cvut.fit.bioop.hackernewsclient.cache.locations.{CacheLocation, FileLocation}
-import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 
 import java.util.Calendar
 import scala.collection.mutable.ArrayBuffer
@@ -13,7 +12,6 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive,
                     private val itemsCache: CacheLocation = new FileLocation("items"),
                     private val usersCache: CacheLocation = new FileLocation("users"))
   extends Cache {
-  private val logger = Logger(getClass.getSimpleName)
 
   private val divider = "~"
   private val storePattern = ("([^" + divider + "]+)" + divider + "([0-9]+)" + divider + "(.+)").r
@@ -46,7 +44,7 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive,
   }
 
   override def cacheItem(item: Item): Unit = {
-    cacheElement(item, item.id, itemsCache)
+    cacheElement(item, item.id.toString, itemsCache)
   }
 
   override def cacheUser(user: User): Unit = {
@@ -63,7 +61,7 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive,
     if(isElemCachedAndUpdate(id, location)) {
       return
     }
-    location.append(elem.toCacheable(x) + "\n")
+    location.append(elem.toCacheable(x))
   }
 
   private def isElemCachedAndUpdate(id: String, location: CacheLocation): Boolean = {
@@ -77,11 +75,8 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive,
       if(cachedId == id) {  // element is already cached
         isElemCached = true
       }
-      if(age.toLong > minAge) {
-        updated.append(line + "\n")
-        logger.info("Line is fresh enough: " + line)
-      } else
-        logger.info("Line in cache too old: " + line)
+      if(age.toLong > minAge)
+        updated.append(line)
     }
 
     location.write(updated)

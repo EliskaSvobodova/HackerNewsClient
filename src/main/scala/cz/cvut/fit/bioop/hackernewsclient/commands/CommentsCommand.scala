@@ -31,7 +31,7 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
       val options = getOptions
       val itemService = new ItemService()
       val mainItem: Item = itemService.display(options.id)
-      itemService.displayPage(options.page, options.pageSize, mainItem.kids)
+      itemService.displayPage(options.page, options.pageSize, mainItem.kids.map(kid => kid.toString))
     } catch {
       case _: HelpException => Renderer.renderHelp(CommentsCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)

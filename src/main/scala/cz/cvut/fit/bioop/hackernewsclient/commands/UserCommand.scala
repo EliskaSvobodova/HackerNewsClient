@@ -33,8 +33,10 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
       val options = getOptions
       val userService = new UserService()
       val user = userService.display(options.id)
-      val itemService = new ItemService()
-      itemService.displayIf(user.submitted, item => !item.deleted && options.display.contains(item.itemType))
+      if(options.display.nonEmpty){
+        val itemService = new ItemService()
+        itemService.displayIf(user.submitted.map(sub => sub.toString), item => !item.deleted && options.display.contains(item.itemType))
+      }
     } catch {
       case _: HelpException => Renderer.renderHelp(UserCommand.help())
       case e: IllegalArgumentException => Renderer.displayError(e.getMessage)
@@ -48,9 +50,7 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
 
     for(option <- commandOptions) {
       option match {
-        case idRe(givenId) =>
-          logger.info("Changing user id from " + id + " to " + givenId)
-          id = givenId
+        case idRe(givenId) => id = givenId
         case "--stories" | "-s" => display.add("story")
         case "--comments" | "-c" => display.add("comment")
         case "--jobs" | "-j" => display.add("job")

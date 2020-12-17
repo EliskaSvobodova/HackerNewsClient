@@ -7,9 +7,7 @@ class FileLocation(val filename: String) extends CacheLocation {
 
   override def getLines: Iterator[String] = {
     val source = Source.fromFile(getFile)
-    val lines = source.getLines()
-    source.close()
-    lines
+    source.getLines()
   }
 
   override def write(lines: Iterable[String]): Unit = {
@@ -30,7 +28,7 @@ class FileLocation(val filename: String) extends CacheLocation {
 
   private def writeLines(writer: FileWriter, lines: Iterable[String]): Unit = {
     for(line <- lines)
-      writer.append(line)
+      writer.append(line + '\n')
     writer.close()
   }
 

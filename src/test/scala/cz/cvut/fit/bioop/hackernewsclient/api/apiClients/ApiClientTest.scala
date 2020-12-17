@@ -11,21 +11,21 @@ class ApiClientTest extends AnyFunSuite {
   test("testGetItem in cache") {
     val apiClient = new V0ApiClient(
       new MockApiRequest,
-      new MockCache(ArrayBuffer(new Item("42"))))
+      new MockCache(ArrayBuffer(new Item(42))))
 
     val itemOpt = apiClient.getItem("42")
     assert(itemOpt.isDefined)
-    assert(itemOpt.get.id == "42")
+    assert(itemOpt.get.id == 42)
   }
 
   test("testGetItem not in cache, in api") {
     val apiClient = new V0ApiClient(
-      new MockApiRequest(ArrayBuffer(new Item("42"))),
+      new MockApiRequest(ArrayBuffer(new Item(42))),
       new MockCache)
 
     val itemOpt = apiClient.getItem("42")
     assert(itemOpt.isDefined)
-    assert(itemOpt.get.id == "42")
+    assert(itemOpt.get.id == 42)
     assert(apiClient.cache.getItem("42").isDefined)
   }
 
@@ -41,13 +41,13 @@ class ApiClientTest extends AnyFunSuite {
 
   test("testGetItems") {
     val apiClient = new V0ApiClient(
-      new MockApiRequest(ArrayBuffer(new Item("42"), new Item("43"))),
-      new MockCache(ArrayBuffer(new Item("42"))))
+      new MockApiRequest(ArrayBuffer(new Item(42), new Item(43))),
+      new MockCache(ArrayBuffer(new Item(42))))
 
     val items = apiClient.getItems(Array("42", "43", "44"))
     assert(items.length == 2)
-    assert(items(0).id == "42")
-    assert(items(1).id == "43")
+    assert(items(0).id == 42)
+    assert(items(1).id == 43)
     assert(apiClient.cache.getItem("42").isDefined)
     assert(apiClient.cache.getItem("43").isDefined)
   }
@@ -115,10 +115,10 @@ class ApiClientTest extends AnyFunSuite {
 
   test("testGetUpdates") {
     val apiClient = new V0ApiClient(
-      new MockApiRequest(updates = new Updates(Array("42", "43"), Array("Josh", "Barney"))),
+      new MockApiRequest(updates = new Updates(Array(42, 43), Array("Josh", "Barney"))),
       new MockCache)
 
     val updates = apiClient.getUpdates
-    assert(updates.sameUpdates(new Updates(Array("42", "43"), Array("Josh", "Barney"))))
+    assert(updates.sameUpdates(new Updates(Array(42, 43), Array("Josh", "Barney"))))
   }
 }

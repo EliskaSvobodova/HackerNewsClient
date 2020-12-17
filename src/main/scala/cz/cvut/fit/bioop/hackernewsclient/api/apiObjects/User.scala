@@ -7,7 +7,7 @@ case class User (id: String = "noUserID",
                  created: Long = -1,
                  karma: Long = 0,
                  about: String = "",
-                 submitted: Array[String] = Array()) {
+                 submitted: Array[Long] = Array()) {
 
   override def toString: String = {
     val fields = for {
