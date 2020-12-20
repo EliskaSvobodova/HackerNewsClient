@@ -7,7 +7,9 @@ import java.sql.Date
 
 
 class StdoutUiBuilder extends UiBuilder {
-  override def buildItemUi(item: Item): Unit = {
+  private val htmlConverter = new HtmlConverter()
+
+  override def buildItemUi(item: Item): String = {
     item.itemType match {
       case "comment" => buildComment(item)
       case "job" => buildJob(item)
@@ -16,63 +18,56 @@ class StdoutUiBuilder extends UiBuilder {
     }
   }
 
-  override def buildUserUi(user: User): Unit = {
-    print("user :     ")
-    printBold(user.id + "\n")
-    print("created:   ")
-    buildTime(user.created)
-    print("karma:     ")
-    println(user.karma)
-    print("about:     ")
-    buildHtml(user.about)
-    print("submitted: ")
-    println(user.submitted.length + " items")
+  override def buildUserUi(user: User): String = {
+    val stringBuilder = new StringBuilder()
+    stringBuilder
+      .append("user :     " + htmlConverter.convertHtml("<b>" + user.id + "</b>\n"))
+      .append("created:   " + buildTime(user.created) + "\n")
+      .append("karma:     " + user.karma + "\n")
+      .append("about:     " + htmlConverter.convertHtml(user.about) + "\n")
+      .append("submitted: " + user.submitted.length + " items" + "\n")
+    stringBuilder.toString()
   }
 
-  override def BuildHelpUi(message: String): Unit = {
-    print(message)
+  override def buildHelpUi(message: String): String = message
+
+  override def buildErrorUi(message: String): String = "\\e[0;31m" + message + "\\e[m"
+
+  private def buildBold(string: String): String = htmlConverter.convertHtml("<b>" + string + "</b>")
+
+  private def buildStory(item: Item): String = {
+    val stringBuilder = new StringBuilder()
+    stringBuilder
+      .append(buildBold("Story: " + item.title) + "(" + item.url + ")" + "\n")
+      .append(buildStats(item))
+    stringBuilder.toString()
   }
 
-  override def BuildErrorUi(message: String): Unit = {
-    println(Console.RED + message + Console.RESET)
+  private def buildComment(item: Item): String =
+    buildBold("Comment: ") + htmlConverter.convertHtml(item.text) + "\n" + buildStats(item)
+
+  private def buildJob(item: Item): String = {
+    val stringBuilder = new StringBuilder()
+    stringBuilder
+      .append(buildBold("Job: " + item.title))
+      .append(htmlConverter.convertHtml(item.text))
+      .append(buildTime(item.time))
+      .append(buildStats(item))
+    stringBuilder.toString()
   }
 
-  private def printBold(string: String): Unit = {
-    print(Console.BOLD + string + Console.RESET)
+  private def buildPoll(item: Item): String = {
+    buildBold("Poll: " + item.title) + buildStats(item)
   }
 
-  private def buildStory(item: Item): Unit = {
-    printBold("Story: " + item.title)
-    println("(" + item.url + ")")
-    buildStats(item)  }
-
-  private def buildComment(item: Item): Unit = {
-    printBold("Comment: ")
-    buildHtml(item.text)
-    buildStats(item)  }
-
-  private def buildJob(item: Item): Unit = {
-    printBold("Job: " + item.title)
-    buildHtml(item.text)
-    buildTime(item.time)
-    buildStats(item)
+  private def buildStats(item: Item): String = {
+    "item id: " + item.id + ", " + item.score + " points, by " + item.by + " | " + item.descendants + " comments\n"
   }
 
-  private def buildPoll(item: Item): Unit = {
-    printBold("Poll: " + item.title)
-    buildStats(item)
-  }
-
-  private def buildStats(item: Item): Unit = {
-    println("item id: " + item.id + ", " + item.score + " points, by " + item.by + " | " + item.descendants + " comments\n")
-  }
-
-  private def buildTime(time: Long): Unit = {
-    println(if(time != -1) new Date(time * 1000) else "<unknown>")
-  }
-
-  private def buildHtml(text: String): Unit = {
-    val htmlConverter = new HtmlConverter()
-    htmlConverter.printHtml(text)
+  private def buildTime(time: Long): String = {
+    if(time != -1)
+      new Date(time * 1000).toString
+    else
+      "<unknown>"
   }
 }

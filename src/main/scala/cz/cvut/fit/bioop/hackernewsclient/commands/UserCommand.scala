@@ -2,7 +2,7 @@ package cz.cvut.fit.bioop.hackernewsclient.commands
 
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 import cz.cvut.fit.bioop.hackernewsclient.services.{ItemService, UserService}
-import cz.cvut.fit.bioop.hackernewsclient.ui.builders.UiBuilder
+import cz.cvut.fit.bioop.hackernewsclient.ui.Ui
 import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException}
 
 import scala.collection.immutable.ListMap
@@ -38,9 +38,9 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
         itemService.displayIf(user.submitted.map(sub => sub.toString), item => !item.deleted && options.display.contains(item.itemType))
       }
     } catch {
-      case _: HelpException => UiBuilder.BuildHelpUi(UserCommand.help())
-      case e: IllegalArgumentException => UiBuilder.BuildErrorUi(e.getMessage)
-      case e: NoSuchElementException => UiBuilder.BuildErrorUi(e.getMessage)
+      case _: HelpException => Ui.displayHelp(UserCommand.help())
+      case e: IllegalArgumentException => Ui.displayError(e.getMessage)
+      case e: NoSuchElementException => Ui.displayError(e.getMessage)
     }
   }
 

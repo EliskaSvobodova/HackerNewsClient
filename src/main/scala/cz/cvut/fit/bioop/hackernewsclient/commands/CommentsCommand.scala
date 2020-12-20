@@ -2,7 +2,7 @@ package cz.cvut.fit.bioop.hackernewsclient.commands
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.Item
 import cz.cvut.fit.bioop.hackernewsclient.logger.Logger
 import cz.cvut.fit.bioop.hackernewsclient.services.ItemService
-import cz.cvut.fit.bioop.hackernewsclient.ui.builders.UiBuilder
+import cz.cvut.fit.bioop.hackernewsclient.ui.Ui
 import cz.cvut.fit.bioop.hackernewsclient.{AppOptions, HelpException}
 
 import scala.collection.immutable.ListMap
@@ -33,9 +33,9 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
       val mainItem: Item = itemService.display(options.id)
       itemService.displayPage(options.page, options.pageSize, mainItem.kids.map(kid => kid.toString))
     } catch {
-      case _: HelpException => UiBuilder.BuildHelpUi(CommentsCommand.help())
-      case e: IllegalArgumentException => UiBuilder.BuildErrorUi(e.getMessage)
-      case e: NoSuchElementException => UiBuilder.BuildErrorUi(e.getMessage)
+      case _: HelpException => Ui.displayHelp(CommentsCommand.help())
+      case e: IllegalArgumentException => Ui.displayError(e.getMessage)
+      case e: NoSuchElementException => Ui.displayError(e.getMessage)
     }
   }
 

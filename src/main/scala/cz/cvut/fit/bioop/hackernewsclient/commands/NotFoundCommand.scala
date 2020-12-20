@@ -1,6 +1,6 @@
 package cz.cvut.fit.bioop.hackernewsclient.commands
 import cz.cvut.fit.bioop.hackernewsclient.AppOptions
-import cz.cvut.fit.bioop.hackernewsclient.ui.builders.UiBuilder
+import cz.cvut.fit.bioop.hackernewsclient.ui.Ui
 
 
 object NotFoundCommand extends CommandObject {
@@ -10,6 +10,6 @@ object NotFoundCommand extends CommandObject {
 
 class NotFoundCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends Command {
   override def execute(): Unit = {
-    UiBuilder.BuildErrorUi("Command not found. Try \"hackernewsclient --help\" for possible options")
+    Ui.displayError("Command not found. Try \"hackernewsclient --help\" for possible options")
   }
 }

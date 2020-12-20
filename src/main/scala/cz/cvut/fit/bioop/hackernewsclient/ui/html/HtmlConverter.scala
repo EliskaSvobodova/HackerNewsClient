@@ -17,8 +17,8 @@ class HtmlConverter {
   private val boldEndRe:  Regex = "(</b>|</strong>)(.*)".r
   private val otherRe:    Regex = "(<.+>|</.+>)(.*)".r
 
-  def printHtml(text: String): Unit = {
-    println(convertTags(convertSpecialChars(text)))
+  def convertHtml(text: String): String = {
+    convertTags(convertSpecialChars(text))
   }
 
   def convertTags(text: String): String = {
