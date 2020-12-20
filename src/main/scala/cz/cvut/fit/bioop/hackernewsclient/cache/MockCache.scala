@@ -24,4 +24,9 @@ class MockCache(val itemsCache: ArrayBuffer[Item] = ArrayBuffer[Item](),
   }
 
   override def timeToLive: Long = 10
+
+  override def clearCache(): Unit = {
+    itemsCache.clear()
+    usersCache.clear()
+  }
 }

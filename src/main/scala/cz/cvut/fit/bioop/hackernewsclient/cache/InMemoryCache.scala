@@ -82,4 +82,9 @@ class InMemoryCache(override val timeToLive: Long = Cache.defaultTimeToLive,
     location.write(updated)
     isElemCached
   }
+
+  override def clearCache(): Unit = {
+    itemsCache.clearCache()
+    usersCache.clearCache()
+  }
 }

@@ -14,9 +14,16 @@ trait Cache {
   def cacheItem(item: Item): Unit
 
   def cacheUser(user: User): Unit
+
+  def clearCache(): Unit
 }
 
 object Cache {
   val defaultTimeToLive: Long = 5 * 60  // in seconds
   val cacheTtlRe: Regex = "--ttl=([0-9]+)".r
+
+  def clearCache(): Unit = {
+    val inMemoryCache = new InMemoryCache()
+    inMemoryCache.clearCache()
+  }
 }

@@ -12,4 +12,6 @@ class MockLocation(var elems: ArrayBuffer[String] = ArrayBuffer()) extends Cache
   override def write(line: String): Unit = elems = ArrayBuffer(line)
 
   override def append(line: String): Unit = elems.append(line)
+
+  override def clearCache(): Unit = elems = ArrayBuffer()
 }

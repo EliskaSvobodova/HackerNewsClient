@@ -17,6 +17,7 @@ object AppOptions {
         case "--help" => appOptions.help = true
         case Logger.severityRe(severity) => appOptions.log = LoggerSeverity.withName(severity)
         case Cache.cacheTtlRe(numSec) => appOptions.ttl = numSec.toLong
+        case "--clear-cache" => appOptions.clearCache = true
         case _ => throw new IllegalArgumentException("Unknown application option, try --help for possible options")
       }
     appOptions
@@ -27,6 +28,7 @@ object AppOptions {
     help += optionHelpBuilder("help", "displays help")
     help += optionHelpBuilder("log", "what message severity should be logged")
     help += optionHelpBuilder("ttl=[value]", "for how long should be elements stored in cache in seconds")
+    help += optionHelpBuilder("--clear-cache", "deletes all cached data")
     help
   }
 
@@ -37,9 +39,22 @@ object AppOptions {
 
 case class AppOptions(var help: Boolean = false,
                       var log: LoggerSeverity.Value = Logger.defaultMinSeverity,
-                      var ttl: Long = Cache.defaultTimeToLive) {
+                      var ttl: Long = Cache.defaultTimeToLive,
+                      var clearCache: Boolean = false) {
   override def toString: String = {
     val fields = for { field <- getClass.getDeclaredFields } yield field.getName + " = " + field.get(this)
     fields.mkString("AppOptions[", ", ", "]")
+  }
+
+  def shouldContinue(): Boolean = {
+    !help
+  }
+
+  def process(): Unit = {
+    Logger.minSeverity = log
+    if(help) {
+      println(CommandProcessor.getHelp)
+    } else if (clearCache)
+      Cache.clearCache()
   }
 }

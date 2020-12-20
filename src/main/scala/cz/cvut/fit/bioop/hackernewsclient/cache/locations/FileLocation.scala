@@ -40,4 +40,8 @@ class FileLocation(val filename: String) extends CacheLocation {
       cacheFile.createNewFile()
     cacheFile
   }
+
+  override def clearCache(): Unit = {
+    new File(cachePath + filename).delete()
+  }
 }

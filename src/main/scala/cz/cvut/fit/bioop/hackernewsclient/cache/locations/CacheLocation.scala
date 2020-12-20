@@ -8,4 +8,6 @@ trait CacheLocation {
 
   def write(line: String): Unit
   def append(line: String): Unit
+
+  def clearCache(): Unit
 }
