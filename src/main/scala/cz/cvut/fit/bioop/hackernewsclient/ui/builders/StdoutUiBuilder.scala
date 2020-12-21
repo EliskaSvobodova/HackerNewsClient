@@ -16,6 +16,7 @@ class StdoutUiBuilder extends UiBuilder[String] {
       case "comment" => buildComment(item)
       case "job" => buildJob(item)
       case "poll" => buildPoll(item)
+      case "pollopt" => buildPollopt(item)
       case _ => buildStory(item)
     }
   }
@@ -23,7 +24,7 @@ class StdoutUiBuilder extends UiBuilder[String] {
   override def buildUserUi(user: User): String = {
     val stringBuilder = new StringBuilder()
     stringBuilder
-      .append("user :     " + htmlConverter.convertHtml("<b>" + user.id + "</b>\n"))
+      .append("user :     " + buildBold(user.id) + "\n")
       .append("created:   " + buildTime(user.created) + "\n")
       .append("karma:     " + user.karma + "\n")
       .append("about:     " + htmlConverter.convertHtml(user.about) + "\n")
@@ -51,15 +52,22 @@ class StdoutUiBuilder extends UiBuilder[String] {
   private def buildJob(item: Item): String = {
     val stringBuilder = new StringBuilder()
     stringBuilder
-      .append(buildBold("Job: " + item.title))
-      .append(htmlConverter.convertHtml(item.text))
-      .append(buildTime(item.time))
+      .append(buildBold("Job: " + item.title) + " " + buildTime(item.time) + "\n")
+      .append(htmlConverter.convertHtml(item.text) + "\n")
       .append(buildStats(item))
     stringBuilder.toString()
   }
 
   private def buildPoll(item: Item): String = {
-    buildBold("Poll: " + item.title) + buildStats(item)
+    buildBold("Poll: " + item.title) + "\n" +
+      "parts: " + item.parts.mkString(",") + "\n" +
+      buildStats(item)
+  }
+
+  private def buildPollopt(item: Item): String = {
+    buildBold("Pollopt:") + "\n" +
+      htmlConverter.convertHtml(item.text) + "\n" +
+      buildStats(item)
   }
 
   private def buildStats(item: Item): String = {

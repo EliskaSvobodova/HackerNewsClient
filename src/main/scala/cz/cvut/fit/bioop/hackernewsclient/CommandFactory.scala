@@ -12,6 +12,8 @@ object CommandFactory {
 
   def create(appOptions: AppOptions, args: Array[String]): Command = {
     val commandOptions = args.slice(1, args.length)
+    if(args.length == 0)
+      return new NotFoundCommand(appOptions, commandOptions)
     args(0) match {
       case TopStoriesCommand.name   => new TopStoriesCommand(appOptions, commandOptions)
       case NewStoriesCommand.name   => new NewStoriesCommand(appOptions, commandOptions)
