@@ -1,7 +1,7 @@
 package cz.cvut.fit.bioop.hackernewsclient.cache.locations
 
 trait CacheLocation {
-  def getLines: Iterator[String]
+  def getLines: Iterable[String]
 
   def write(lines: Iterable[String]): Unit
   def append(lines: Iterable[String]): Unit

@@ -5,9 +5,11 @@ import scala.io.Source
 class FileLocation(val filename: String) extends CacheLocation {
   private val cachePath = "cache/"
 
-  override def getLines: Iterator[String] = {
+  override def getLines: Iterable[String] = {
     val source = Source.fromFile(getFile)
-    source.getLines()
+    val lines = source.getLines().toArray
+    source.close()
+    lines
   }
 
   override def write(lines: Iterable[String]): Unit = {
