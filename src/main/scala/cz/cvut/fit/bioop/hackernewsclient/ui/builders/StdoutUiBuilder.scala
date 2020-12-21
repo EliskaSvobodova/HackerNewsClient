@@ -5,7 +5,9 @@ import cz.cvut.fit.bioop.hackernewsclient.ui.html.HtmlConverter
 
 import java.sql.Date
 
-
+/**
+ * Constructs strings to be displayed to the user in UI
+ */
 class StdoutUiBuilder extends UiBuilder {
   private val htmlConverter = new HtmlConverter()
 

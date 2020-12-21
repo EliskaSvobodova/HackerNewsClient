@@ -2,6 +2,9 @@ package cz.cvut.fit.bioop.hackernewsclient.api.responseReaders
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 
+/**
+ * Transforms elements from String response to instance of the corresponding data class
+ */
 trait ResponseReader {
   def toItem(response: String): Option[Item]
 

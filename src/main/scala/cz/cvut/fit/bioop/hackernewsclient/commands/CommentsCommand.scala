@@ -17,6 +17,9 @@ object CommentsCommand extends CommandObject {
   ))
 }
 
+/**
+ * Comments command that allows comment browsing accordion to item's ids
+ */
 class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends Command {
   private val logger = Logger(getClass.getSimpleName)
   private val idRe = "--id=([0-9]+)".r
@@ -25,6 +28,9 @@ class CommentsCommand(val appOptions: AppOptions, val commandOptions: Array[Stri
 
   case class Options(id: String, page: Int, pageSize: Int)
 
+  /**
+   * Displays the main item whose comments we want to read and then it displays the requested page with comments
+   */
   override def execute(): Unit = {
     logger.info("Executing CommentsCommand")
     try{

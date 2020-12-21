@@ -37,6 +37,13 @@ object AppOptions {
   }
 }
 
+/**
+ * Data class that holds application options
+ * @param help should be help displayed
+ * @param log what min severity of logging should be displayed
+ * @param ttl time to live for cached elements in seconds
+ * @param clearCache should be all data removed from the cache
+ */
 case class AppOptions(var help: Boolean = false,
                       var log: LoggerSeverity.Value = Logger.defaultMinSeverity,
                       var ttl: Long = Cache.defaultTimeToLive,
@@ -46,10 +53,16 @@ case class AppOptions(var help: Boolean = false,
     fields.mkString("AppOptions[", ", ", "]")
   }
 
+  /**
+   * Should be commands executed or should the application exit
+   */
   def shouldContinue(): Boolean = {
     !help
   }
 
+  /**
+   * Handle all necessary tasks according to given application options
+   */
   def process(): Unit = {
     Logger.minSeverity = log
     if(help) {

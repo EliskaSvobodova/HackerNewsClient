@@ -4,6 +4,9 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 
 import scala.util.matching.Regex
 
+/**
+ * Cache for storing just used data
+ */
 trait Cache {
   def timeToLive: Long
 

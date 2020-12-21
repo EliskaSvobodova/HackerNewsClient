@@ -20,6 +20,9 @@ object UserCommand extends CommandObject {
   override val name: String = "user"
 }
 
+/**
+ * Command that displays user's data and hers/his contributions
+ */
 class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String]) extends Command {
   private val logger = Logger(getClass.getSimpleName)
 
@@ -27,6 +30,10 @@ class UserCommand(val appOptions: AppOptions, val commandOptions: Array[String])
 
   case class UserOptions(id: String, display: mutable.TreeSet[String])
 
+  /**
+   * Displays the user with specified id (username) and then, if requested, displays his/hers contributions
+   * according to command options
+   */
   override def execute(): Unit = {
     logger.info("Executing UserCommand")
     try{

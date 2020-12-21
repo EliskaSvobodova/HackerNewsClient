@@ -4,6 +4,9 @@ import cz.cvut.fit.bioop.hackernewsclient.logger.Logger.minSeverity
 
 import scala.util.matching.Regex
 
+/**
+ * Application's logger, which min severity to show can be specified as app option
+ */
 object Logger {
   val severityRe: Regex = "--log=(error|warning|info)$".r
   val defaultMinSeverity: LoggerSeverity.Value = LoggerSeverity.info

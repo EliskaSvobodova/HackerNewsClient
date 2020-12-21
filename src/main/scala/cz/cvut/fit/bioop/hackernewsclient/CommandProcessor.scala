@@ -1,5 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient
 
+/**
+ * Process app options and execute command
+ */
 object CommandProcessor {
   def process(appOptions: AppOptions, args: Array[String]): Unit = {
     appOptions.process()

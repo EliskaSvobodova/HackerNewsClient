@@ -2,6 +2,9 @@ package cz.cvut.fit.bioop.hackernewsclient.api.responseWriters
 
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 
+/**
+ * Transforms instances of data classes to string responses
+ */
 trait ResponseWriter {
   def fromItem(item: Item): String
 

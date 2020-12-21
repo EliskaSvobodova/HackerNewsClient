@@ -2,6 +2,11 @@ package cz.cvut.fit.bioop.hackernewsclient.api.apiObjects
 
 import upickle.default.{macroRW, ReadWriter => RW}
 
+/**
+ * Data class that holds info from web API about recently changed objects
+ * @param items Ids of items that was changed
+ * @param profiles Ids of users that was changed
+ */
 case class Updates(items: Array[Long], profiles: Array[String]) {
   override def toString: String = {
     val fields = for {

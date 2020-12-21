@@ -2,7 +2,11 @@ package cz.cvut.fit.bioop.hackernewsclient.cache.locations
 import java.io.{File, FileWriter}
 import scala.io.Source
 
-class FileLocation(val filename: String) extends CacheLocation {
+/**
+ * Stores cache data in a file
+ * @param filename name of the file where to store data
+ */
+class FileLocation(val filename: String = "default") extends CacheLocation {
   private val cachePath = "cache/"
 
   override def getLines: Iterable[String] = {

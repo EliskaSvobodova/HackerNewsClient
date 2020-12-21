@@ -8,6 +8,9 @@ import cz.cvut.fit.bioop.hackernewsclient.ui.Ui
 
 import scala.util.matching.Regex
 
+/**
+ * Common trait for stories commands
+ */
 trait StoriesCommand extends Command {
   private val logger = Logger(getClass.getSimpleName)
 
@@ -16,6 +19,9 @@ trait StoriesCommand extends Command {
 
   case class StoriesOptions(page: Int, pageSize: Int)
 
+  /**
+   * Displays stories with given ids
+   */
   protected def execute(storiesObj: StoriesCommandObject, storiesIds: Array[String] = Array()): Unit = {
     try{
       val options = getOptions

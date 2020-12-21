@@ -3,6 +3,9 @@ package cz.cvut.fit.bioop.hackernewsclient.api.responseWriters
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import upickle.default.write
 
+/**
+* Response writer that uses UPickle library to wrap up api objects
+*/
 class UPickleResponseWriter extends ResponseWriter {
   override def fromItem(item: Item): String =
     write[Item](item)

@@ -3,6 +3,9 @@ package cz.cvut.fit.bioop.hackernewsclient.api.responseReaders
 import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, Updates, User}
 import upickle.default.read
 
+/**
+ * Response reader that uses UPickle library to unwrap api objects
+ */
 class UPickleResponseReader extends ResponseReader {
   def toItem(response: String): Option[Item] =
     Option(read[Item](response))

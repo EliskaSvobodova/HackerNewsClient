@@ -7,7 +7,13 @@ import cz.cvut.fit.bioop.hackernewsclient.ui.Ui
 import java.util.NoSuchElementException
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * Fetches data from api client and displays them while performing lazy fetching
+ */
 class ItemService(val apiClient: ApiClient = ApiClientFactory()) {
+  /**
+   * Display single item with given id
+   */
   def display(id: String): Item = {
     val itemOpt = apiClient.getItem(id)
     if(itemOpt.isEmpty)
@@ -16,6 +22,9 @@ class ItemService(val apiClient: ApiClient = ApiClientFactory()) {
     itemOpt.get
   }
 
+  /**
+   * Displays page of items, one otem at at time
+   */
   def displayPage(page: Int, pageSize: Int, ids: Array[String]): Array[Item] = {
     if (page <= 0 || pageSize <= 0 || (page - 1) * pageSize > ids.length) {
       throw new IllegalArgumentException("There are no more items on page " + page + " " +
@@ -33,6 +42,9 @@ class ItemService(val apiClient: ApiClient = ApiClientFactory()) {
     displayedItems.toArray
   }
 
+  /**
+   * Displays all items from the given array that fulfill given condition
+   */
   def displayIf(ids: Array[String], cond: Item => Boolean): Array[Item] = {
     val displayedItems = new ArrayBuffer[Item]()
     for(itemId <- ids){

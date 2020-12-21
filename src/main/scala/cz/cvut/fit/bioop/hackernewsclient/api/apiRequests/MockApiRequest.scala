@@ -5,6 +5,11 @@ import cz.cvut.fit.bioop.hackernewsclient.api.responseWriters.ResponseWriter
 
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * Mock class for ApiRequest
+ *
+ * It is created with required data and just returns them when asked
+ */
 class MockApiRequest(val items: ArrayBuffer[Item] = ArrayBuffer[Item](),
                      val users: ArrayBuffer[User] = ArrayBuffer[User](),
                      val updates: Updates = Updates(Array(), Array()),

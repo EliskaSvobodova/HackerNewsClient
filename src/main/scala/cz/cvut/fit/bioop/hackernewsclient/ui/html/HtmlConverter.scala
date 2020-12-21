@@ -2,6 +2,9 @@ package cz.cvut.fit.bioop.hackernewsclient.ui.html
 
 import scala.util.matching.Regex
 
+/**
+ * Converts string with html tags and symbols to string with unicode symbols that will fromat the output
+ */
 class HtmlConverter {
   private val quotRe: Regex = "&quot;(.*)".r
   private val aposRe: Regex = "&apos;(.*)".r

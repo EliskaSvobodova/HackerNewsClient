@@ -4,6 +4,9 @@ import cz.cvut.fit.bioop.hackernewsclient.api.apiObjects.{Item, User}
 import cz.cvut.fit.bioop.hackernewsclient.ui.builders.StdoutUiBuilder
 import cz.cvut.fit.bioop.hackernewsclient.ui.renderers.StdoutUiRenderer
 
+/**
+ * Combines Ui building and rendering
+ */
 object Ui {
   val uiBuilder = new StdoutUiBuilder
   val uiRenderer = new StdoutUiRenderer

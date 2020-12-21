@@ -3,6 +3,9 @@ package cz.cvut.fit.bioop.hackernewsclient
 import cz.cvut.fit.bioop.hackernewsclient.commands.stories.{BestStoriesCommand, NewStoriesCommand, TopStoriesCommand}
 import cz.cvut.fit.bioop.hackernewsclient.commands.{Command, CommandObject, CommentsCommand, NotFoundCommand, UserCommand}
 
+/**
+ * Creates Command which is requested in app options
+ */
 object CommandFactory {
   val allCommands: Array[CommandObject] = Array(TopStoriesCommand, NewStoriesCommand, BestStoriesCommand,
                                                 UserCommand, CommentsCommand)

@@ -1,5 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient.cache.locations
 
+/**
+ * Handles writing and reading cache data from their location
+ */
 trait CacheLocation {
   def getLines: Iterable[String]
 
