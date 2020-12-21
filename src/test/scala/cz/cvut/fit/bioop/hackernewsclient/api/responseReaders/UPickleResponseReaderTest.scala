@@ -41,7 +41,6 @@ class UPickleResponseReaderTest extends AnyFunSuite {
     val testResponse = "{\"about\":\"http://norvig.com\",\"created\":1190398535,\"id\":\"norvig\",\"karma\":690,\"submitted\":[22072713,18144213,17832839,10328571,10328326]}"
     val user = ResponseReader.toUser(testResponse).get
     assert(user.id == "norvig")
-    assert(user.delay == -1)
     assert(user.created == 1190398535)
     assert(user.karma == 690)
     assert(user.about == "http://norvig.com")
