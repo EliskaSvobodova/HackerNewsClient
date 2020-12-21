@@ -8,7 +8,7 @@ import java.sql.Date
 /**
  * Constructs strings to be displayed to the user in UI
  */
-class StdoutUiBuilder extends UiBuilder {
+class StdoutUiBuilder extends UiBuilder[String] {
   private val htmlConverter = new HtmlConverter()
 
   override def buildItemUi(item: Item): String = {

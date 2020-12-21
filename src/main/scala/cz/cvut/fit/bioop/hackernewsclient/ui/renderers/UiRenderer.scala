@@ -1,8 +1,8 @@
 package cz.cvut.fit.bioop.hackernewsclient.ui.renderers
 
 /**
- * Renders given text to the output
+ * Renders given element to the output
  */
-trait UiRenderer {
-  def render(text: String): Unit
+trait UiRenderer[T] {
+  def render(text: T): Unit
 }
